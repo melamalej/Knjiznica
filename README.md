@@ -1,1 +1,1 @@
-# Knjiznica
+# Informacijski sistem knjižnice
