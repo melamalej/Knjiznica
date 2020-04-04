@@ -1,2 +1,2 @@
 # Informacijski sistem knjižnice
-## Projekt pri predmeu OPB
+### Projekt pri predmetu OPB
