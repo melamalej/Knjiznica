@@ -7,7 +7,7 @@ source("uvoz/auth.R")
 
 # Povežemo se z gonilnikom za PostgreSQL
 drv <- dbDriver("PostgreSQL")
-
+blablabla
 # Uporabimo tryCatch,
 # da prisilimo prekinitev povezave v primeru napake
 tryCatch({
