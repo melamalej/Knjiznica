@@ -1,0 +1,188 @@
+Title,Author,Genre,KobissID,Availability
+Fundamentals of Wavelets,"Goswami, Jaideva",tech,90531,yes
+Data Smart,"Foreman, John",tech,69366,yes
+God Created the Integers,"Hawking, Stephen",tech,23201,yes
+Superfreakonomics,"Dubner, Stephen",science,96565,yes
+Orientalism,"Said, Edward",nonfiction,11428,yes
+"Nature of Statistical Learning Theory, The","Vapnik, Vladimir",tech,38617,yes
+Integration of the Indian States,"Menon, V P",nonfiction,26797,yes
+"Drunkard's Walk, The","Mlodinow, Leonard",science,87431,yes
+Image Processing & Mathematical Morphology,"Shih, Frank",tech,77958,yes
+How to Think Like Sherlock Holmes,"Konnikova, Maria",nonfiction,37037,yes
+Data Scientists at Work,Sebastian Gutierrez,tech,87502,yes
+Slaughterhouse Five,"Vonnegut, Kurt",fiction,93209,yes
+Birth of a Theorem,"Villani, Cedric",science,24637,yes
+Structure & Interpretation of Computer Programs,"Sussman, Gerald",tech,24940,yes
+"Age of Wrath, The","Eraly, Abraham",nonfiction,67413,yes
+"Trial, The","Kafka, Frank",fiction,47901,yes
+Statistical Decision Theory',"Pratt, John",tech,34245,yes
+Data Mining Handbook,"Nisbet, Robert",tech,18687,yes
+"New Machiavelli, The","Wells, H. G.",fiction,56456,yes
+Physics & Philosophy,"Heisenberg, Werner",philosophy,95458,yes
+Making Software,"Oram, Andy",tech,10634,yes
+"Analysis, Vol I","Tao, Terence",tech,68424,yes
+Machine Learning for Hackers,"Conway, Drew",tech,56531,yes
+"Signal and the Noise, The","Silver, Nate",tech,93121,yes
+Python for Data Analysis,"McKinney, Wes",tech,47464,yes
+Introduction to Algorithms,"Cormen, Thomas",tech,74999,yes
+"Beautiful and the Damned, The","Deb, Siddhartha",nonfiction,25759,yes
+"Outsider, The","Camus, Albert",fiction,17557,yes
+"Complete Sherlock Holmes, The - Vol I","Doyle, Arthur Conan",fiction,67199,yes
+"Complete Sherlock Holmes, The - Vol II","Doyle, Arthur Conan",fiction,39838,yes
+"Wealth of Nations, The","Smith, Adam",science,68745,yes
+"Pillars of the Earth, The","Follett, Ken",fiction,27633,yes
+Mein Kampf,"Hitler, Adolf",nonfiction,56450,yes
+"Tao of Physics, The","Capra, Fritjof",science,18556,yes
+Surely You're Joking Mr Feynman,"Feynman, Richard",science,23135,yes
+"Farewell to Arms, A","Hemingway, Ernest",fiction,29433,yes
+"Veteran, The","Forsyth, Frederick",fiction,73193,yes
+False Impressions,"Archer, Jeffery",fiction,26160,yes
+"Last Lecture, The","Pausch, Randy",nonfiction,24722,yes
+Return of the Primitive,"Rand, Ayn",philosophy,30592,yes
+Jurassic Park,"Crichton, Michael",fiction,89529,yes
+"Russian Journal, A","Steinbeck, John",nonfiction,70565,yes
+Tales of Mystery and Imagination,"Poe, Edgar Allen",fiction,89766,yes
+Freakonomics,"Dubner, Stephen",science,81542,yes
+"Hidden Connections, The","Capra, Fritjof",science,80641,yes
+"Story of Philosophy, The","Durant, Will",philosophy,51383,yes
+Asami Asami,"Deshpande, P L",fiction,59868,yes
+Journal of a Novel,"Steinbeck, John",fiction,58084,yes
+Once There Was a War,"Steinbeck, John",nonfiction,80907,yes
+"Moon is Down, The","Steinbeck, John",fiction,47044,yes
+"Brethren, The","Grisham, John",fiction,53014,yes
+In a Free State,"Naipaul, V. S.",fiction,38321,yes
+Catch 22,"Heller, Joseph",fiction,42184,yes
+"Complete Mastermind, The",BBC,nonfiction,70389,yes
+Dylan on Dylan,"Dylan, Bob",nonfiction,53486,yes
+Soft Computing & Intelligent Systems,"Gupta, Madan",tech,84625,yes
+Textbook of Economic Theory,"Stonier, Alfred",tech,41590,yes
+Econometric Analysis,"Greene, W. H.",tech,16644,yes
+Learning OpenCV,"Bradsky, Gary",tech,94695,yes
+Data Structures Using C & C++,"Tanenbaum, Andrew",tech,97852,yes
+"Computer Vision, A Modern Approach","Forsyth, David",tech,12790,yes
+Principles of Communication Systems,"Taub, Schilling",tech,62145,yes
+Let Us C,"Kanetkar, Yashwant",tech,18749,yes
+"Amulet of Samarkand, The","Stroud, Jonathan",fiction,25119,yes
+Crime and Punishment,"Dostoevsky, Fyodor",fiction,19677,yes
+Angels & Demons,"Brown, Dan",fiction,10561,yes
+"Argumentative Indian, The","Sen, Amartya",nonfiction,57675,yes
+Sea of Poppies,"Ghosh, Amitav",fiction,12672,yes
+"Idea of Justice, The","Sen, Amartya",philosophy,83527,yes
+"Raisin in the Sun, A","Hansberry, Lorraine",fiction,33965,yes
+All the President's Men,"Woodward, Bob",nonfiction,34024,yes
+"Prisoner of Birth, A","Archer, Jeffery",fiction,14268,yes
+Scoop!,"Nayar, Kuldip",nonfiction,79964,yes
+Ahe Manohar Tari,"Deshpande, Sunita",nonfiction,26760,yes
+"Last Mughal, The","Dalrymple, William",nonfiction,90629,yes
+"Social Choice & Welfare, Vol 39 No. 1",Various,tech,49699,yes
+Radiowaril Bhashane & Shrutika,"Deshpande, P L",nonfiction,47521,yes
+Gun Gayin Awadi,"Deshpande, P L",nonfiction,80046,yes
+Aghal Paghal,"Deshpande, P L",nonfiction,52458,yes
+Maqta-e-Ghalib,"Garg, Sanjay",nonfiction,13024,yes
+Manasa,"Kale, V P",nonfiction,14875,yes
+India from Midnight to Milennium,"Tharoor, Shashi",nonfiction,62974,yes
+"Great Indian Novel, The","Tharoor, Shashi",fiction,53287,yes
+O Jerusalem!,"Lapierre, Dominique",nonfiction,59920,yes
+"City of Joy, The","Lapierre, Dominique",fiction,39813,yes
+Freedom at Midnight,"Lapierre, Dominique",nonfiction,85389,yes
+"Winter of Our Discontent, The","Steinbeck, John",fiction,37921,yes
+On Education,"Russell, Bertrand",philosophy,38882,yes
+Free Will,"Harris, Sam",nonfiction,12452,yes
+Bookless in Baghdad,"Tharoor, Shashi",nonfiction,44265,yes
+"Case of the Lame Canary, The","Gardner, Earle Stanley",fiction,78482,yes
+"Theory of Everything, The","Hawking, Stephen",science,47839,yes
+New Markets & Other Essays,"Drucker, Peter",science,35965,yes
+Electric Universe,"Bodanis, David",science,50958,yes
+"Hunchback of Notre Dame, The","Hugo, Victor",fiction,56630,yes
+Burning Bright,"Steinbeck, John",fiction,22618,yes
+"Age of Discontuinity, The","Drucker, Peter",nonfiction,61373,yes
+Doctor in the Nude,"Gordon, Richard",fiction,68141,yes
+Down and Out in Paris & London,"Orwell, George",nonfiction,55461,yes
+Identity & Violence,"Sen, Amartya",philosophy,56061,yes
+Beyond the Three Seas,"Dalrymple, William",nonfiction,18404,yes
+Talking Straight,"Iacoca, Lee",nonfiction,44044,yes
+"Maugham's Collected Short Stories, Vol 3","Maugham, William S",fiction,36115,yes
+"Phantom of Manhattan, The","Forsyth, Frederick",fiction,38637,yes
+Ashenden of The British Agent,"Maugham, William S",fiction,46791,yes
+Zen & The Art of Motorcycle Maintenance,"Pirsig, Robert",philosophy,88319,yes
+"Great War for Civilization, The","Fisk, Robert",nonfiction,33714,yes
+We the Living,"Rand, Ayn",fiction,14755,yes
+"Artist and the Mathematician, The","Aczel, Amir",science,73101,yes
+History of Western Philosophy,"Russell, Bertrand",philosophy,14612,yes
+Rationality & Freedom,"Sen, Amartya",science,96801,yes
+Clash of Civilizations and Remaking of the World Order,"Huntington, Samuel",nonfiction,45278,yes
+Uncommon Wisdom,"Capra, Fritjof",nonfiction,17230,yes
+One,"Bach, Richard",nonfiction,36509,yes
+To Sir With Love,Braithwaite,fiction,65314,yes
+Half A Life,"Naipaul, V S",fiction,34789,yes
+"Discovery of India, The","Nehru, Jawaharlal",nonfiction,56595,yes
+Apulki,"Deshpande, P L",nonfiction,56267,yes
+Unpopular Essays,"Russell, Bertrand",philosophy,63730,yes
+"Deceiver, The","Forsyth, Frederick",fiction,30696,yes
+Veil: Secret Wars of the CIA,"Woodward, Bob",nonfiction,10853,yes
+Char Shabda,"Deshpande, P L",nonfiction,30095,yes
+Rosy is My Relative,"Durrell, Gerald",fiction,56231,yes
+"Moon and Sixpence, The","Maugham, William S",fiction,39691,yes
+"Short History of the World, A","Wells, H G",nonfiction,49398,yes
+"Trembling of a Leaf, The","Maugham, William S",fiction,13534,yes
+Doctor on the Brain,"Gordon, Richard",fiction,16882,yes
+Simpsons & Their Mathematical Secrets,"Singh, Simon",science,73748,yes
+Pattern Classification,"Duda, Hart",tech,68614,yes
+From Beirut to Jerusalem,"Friedman, Thomas",nonfiction,93485,yes
+"Code Book, The","Singh, Simon",science,12304,yes
+"Age of the Warrior, The","Fisk, Robert",nonfiction,37173,yes
+"Numbers Behind Numb3rs, The","Devlin, Keith",science,44750,yes
+"Life in Letters, A","Steinbeck, John",nonfiction,41713,yes
+"Information, The","Gleick, James",science,52586,yes
+Elements of Information Theory,"Thomas, Joy",tech,14346,yes
+Power Electronics - Rashid,"Rashid, Muhammad",tech,60321,yes
+Power Electronics - Mohan,"Mohan, Ned",tech,11049,yes
+Neural Networks,"Haykin, Simon",tech,79940,yes
+"Grapes of Wrath, The","Steinbeck, John",fiction,26811,yes
+Vyakti ani Valli,"Deshpande, P L",nonfiction,97070,yes
+Statistical Learning Theory,"Vapnik, Vladimir",tech,66471,yes
+Empire of the Mughal - The Tainted Throne,"Rutherford, Alex",nonfiction,10496,yes
+Empire of the Mughal - Brothers at War,"Rutherford, Alex",nonfiction,84509,yes
+Empire of the Mughal - Ruler of the World,"Rutherford, Alex",nonfiction,16206,yes
+Empire of the Mughal - The Serpent's Tooth,"Rutherford, Alex",nonfiction,19401,yes
+Empire of the Mughal - Raiders from the North,"Rutherford, Alex",nonfiction,19348,yes
+Mossad,"Baz-Zohar, Michael",nonfiction,65346,yes
+Jim Corbett Omnibus,"Corbett, Jim",nonfiction,58185,yes
+20000 Leagues Under the Sea,"Verne, Jules",fiction,12584,yes
+Batatyachi Chal,Deshpande P L,fiction,62369,yes
+Hafasavnuk,Deshpande P L,fiction,99845,yes
+Urlasurla,Deshpande P L,fiction,34512,yes
+Pointers in C,"Kanetkar, Yashwant",tech,73116,yes
+"Cathedral and the Bazaar, The","Raymond, Eric",tech,88227,yes
+Design with OpAmps,"Franco, Sergio",tech,96374,yes
+Think Complexity,"Downey, Allen",tech,10374,yes
+"Devil's Advocate, The","West, Morris",fiction,88238,yes
+Ayn Rand Answers,"Rand, Ayn",philosophy,28950,yes
+Philosophy: Who Needs It,"Rand, Ayn",philosophy,10875,yes
+Data Analysis with Open Source Tools,"Janert, Phillip",tech,11189,yes
+Broca's Brain,"Sagan, Carl",science,33141,yes
+Men of Mathematics,"Bell, E T",science,73865,yes
+Oxford book of Modern Science Writing,"Dawkins, Richard",science,40952,yes
+"Justice, Judiciary and Democracy","Ranjan, Sudhanshu",nonfiction,99008,yes
+"Arthashastra, The",Kautiyla,philosophy,91495,yes
+We the People,Palkhivala,philosophy,74236,yes
+We the Nation,Palkhivala,philosophy,50574,yes
+"Courtroom Genius, The",Sorabjee,nonfiction,62787,yes
+Dongri to Dubai,"Zaidi, Hussain",nonfiction,88306,yes
+"History of England, Foundation","Ackroyd, Peter",nonfiction,50861,yes
+City of Djinns,"Dalrymple, William",nonfiction,66849,yes
+India's Legal System,Nariman,nonfiction,55950,yes
+More Tears to Cry,"Sassoon, Jean",fiction,87707,yes
+"Ropemaker, The","Dickinson, Peter",fiction,81752,yes
+Angels & Demons,"Brown, Dan",fiction,61555,yes
+"Prince, The",Machiavelli,fiction,68041,yes
+Eyeless in Gaza,"Huxley, Aldous",fiction,68617,yes
+Tales of Beedle the Bard,"Rowling, J K",fiction,54285,yes
+Girl with the Dragon Tattoo,"Larsson, Steig",fiction,88836,yes
+Girl who kicked the Hornet's Nest,"Larsson, Steig",fiction,33855,yes
+Girl who played with Fire,"Larsson, Steig",fiction,48550,yes
+Structure and Randomness,"Tao, Terence",science,32399,yes
+Image Processing with MATLAB,"Eddins, Steve",tech,60455,yes
+Animal Farm,"Orwell, George",fiction,52705,yes
+"Idiot, The","Dostoevsky, Fyodor",fiction,10621,yes
+"Christmas Carol, A","Dickens, Charles",fiction,28819,yes
