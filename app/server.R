@@ -16,22 +16,27 @@ shinyServer(function(input, output, session) {
   # Vzpostavimo povezavo
   conn <- dbConnect(drv, dbname=db, host=host, user=user, password=password, port=DB_PORT)
   # Pripravimo tabelo
-  tbl.transakcija <- tbl(conn, "transakcija")
+  #tbl.transakcija <- tbl(conn, "transakcija")
+  
+  tbl.books <- tbl(conn, "books")
+  tbl.transaction <- tbl(conn, "transaction")
+  tbl.loan <- tbl(conn, "loan")
+  tbl.make <- tbl(conn, "make")
   
   # Povezava naj se prekine ob izhodu
   cancel.onSessionEnded <- session$onSessionEnded(function() {
     dbDisconnect(conn)
   })
   
-  output$transakcije <- renderTable({
+  #output$transakcije <- renderTable({
     # Naredimo poizvedbo
     # x %>% f(y, ...) je ekvivalentno f(x, y, ...)
-    t <- tbl.transakcija %>% filter(znesek > !!input$min) %>%
-      arrange(znesek) %>% data.frame()
+    #t <- tbl.transakcija %>% filter(znesek > !!input$min) %>%
+      #arrange(znesek) %>% data.frame()
     # Čas izpišemo kot niz
-    t$cas <- as.character(t$cas)
+    #t$cas <- as.character(t$cas)
     # Vrnemo dobljeno razpredelnico
-    t
-  })
+    #t
+  #})
 
 })

@@ -20,11 +20,23 @@ newdata <- na.omit(knjige)
 
 v <- round(runif(187, min = 10000, max = 99999))    
 
-newdata$KobissID <- v
-newdata$Availability <- rep(c("yes"), times = 187)
+newdata$kobissid <- v
+newdata$availability <- rep(c("yes"), times = 187)
+names(newdata)[names(newdata)=="Title"] <- "title"
+names(newdata)[names(newdata)=="Author"] <- "author"
+names(newdata)[names(newdata)=="Genre"] <- "genre"
 
 # Zapišemo v datoteko CSV
 write_csv(newdata, "books.csv", na="")
+
+uporabniki <- read_csv("uporabniki.csv")
+names(uporabniki)[names(uporabniki)=="emso"] <- "idnumber"
+names(uporabniki)[names(uporabniki)=="ime"] <- "name"
+names(uporabniki)[names(uporabniki)=="priimek"] <- "lastname"
+names(uporabniki)[names(uporabniki)=="naslov"] <- "adress"
+names(uporabniki)[names(uporabniki)=="uporabnisko_ime"] <- "username"
+names(uporabniki)[names(uporabniki)=="geslo"] <- "password"
+
 
 # Nadomestimo decimalne vejice in ločila tisočic ter pretvorimo v števila
 #sl <- locale(decimal_mark=",", grouping_mark=".")
