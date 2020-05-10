@@ -2,7 +2,7 @@ library(shiny)
 
 shinyUI(fluidPage(
 
-  titlePanel("Banka"),
+  titlePanel("Knjiznica"),
 
   sidebarLayout(
     sidebarPanel(
