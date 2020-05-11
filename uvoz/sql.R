@@ -68,7 +68,6 @@ pravice <- function(){tryCatch({
   
   dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost",con=conn))
   dbSendQuery(conn, build_sql("GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO javnost",con=conn))
-  
   }, finally = {
   
   dbDisconnect(conn) })
