@@ -133,6 +133,14 @@ create_table <- function(){
                                         idnumber text NOT NULL REFERENCES users(idnumber),
                                         id text NOT NULL REFERENCES transaction(id))", con=conn))
     
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
+    
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
+    
     
   }, finally = {
     dbDisconnect(conn) 
