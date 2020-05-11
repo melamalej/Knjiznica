@@ -2,13 +2,15 @@ library(shiny)
 library(shinydashboard)
 
 shinyUI(dashboardPage(
+ 
   dashboardHeader(title = "Library"),
+  
   dashboardSidebar(sidebarMenu(
     menuItem("Home page", tabName = "naslovnica", icon = icon("home")),
     menuItem("Books", tabName = "knjige", icon = icon("book")),
     menuItem("Borrow a book", tabName = "izposoja", icon = icon("book-reader")),
-    menuItem("My loans", tabName = "profil", icon = icon("user")))
-  ),
+    menuItem("My loans", tabName = "profil", icon = icon("user")))),
+  
   dashboardBody(
     # Boxes need to be put in a row (or column)
     tabItems(
@@ -17,8 +19,10 @@ shinyUI(dashboardPage(
               h2("Welcome to our library!")),
       # Second tab content
       tabItem(tabName = "knjige",
-              h2("Widgets tab content")),
-      # Third tab content
+              h2("Search by title or by author"), box('', textInput('text', 'Title'), textInput('text', 'Author'),
+                                             actionButton('isci', 'Search')
+            )),
+      # Third tab content2
       tabItem(tabName = "izposoja",
               h2("Widgets tab content")),
       # Fourth tab content
@@ -28,6 +32,7 @@ shinyUI(dashboardPage(
   )
 )
 )
+
 
 #shinyUI(fluidPage(
 
