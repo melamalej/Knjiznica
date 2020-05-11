@@ -11,10 +11,10 @@ drv <- dbDriver("PostgreSQL")
 
 # Uporabimo tryCatch,
 # da prisilimo prekinitev povezave v primeru napake
-tryCatch({
+#tryCatch({
   # Vzpostavimo povezavo z bazo
-  conn <- dbConnect(drv, dbname=db, host=host, user=user, password=password)
-  t <- dbGetQuery(conn, build_sql("SELECT * FROM books", con=conn))
+  #conn <- dbConnect(drv, dbname=db, host=host, user=user, password=password)
+  #t <- dbGetQuery(conn, build_sql("SELECT * FROM books", con=conn))
                    
   # Poizvedbo zgradimo s funkcijo build_sql
   # in izvedemo s funkcijo dbGetQuery
@@ -39,11 +39,11 @@ tryCatch({
   #}, finally = {
     # Na koncu nujno prekinemo povezavo z bazo,
     # saj preveč odprtih povezav ne smemo imeti
-    dbDisconnect(conn)
+    #dbDisconnect(conn)
     # Koda v bloku finally se izvede v vsakem primeru
     # - bodisi ob koncu izvajanja bloka try,
     # ali pa po tem, ko se ta konča z napako
-  })
+  #})
 
 # Če tabela obstaja, jo zbrišemo
 pravice <- function(){
