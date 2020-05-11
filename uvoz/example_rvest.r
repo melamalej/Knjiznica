@@ -27,7 +27,7 @@ names(newdata)[names(newdata)=="Author"] <- "author"
 names(newdata)[names(newdata)=="Genre"] <- "genre"
 
 # Zapišemo v datoteko CSV
-write_csv(newdata, "books.csv", na="")
+#write_csv(newdata, "books.csv", na="")
 
 uporabniki <- read_csv("uporabniki.csv")
 names(uporabniki)[names(uporabniki)=="emso"] <- "idnumber"
