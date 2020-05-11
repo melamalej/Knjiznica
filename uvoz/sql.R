@@ -153,7 +153,6 @@ insert_data <- function(){
   })
 }
 
-<<<<<<< HEAD
 pravice <- function(){
   # Uporabimo tryCatch,(da se povežemo in bazo in odvežemo)
   # da prisilimo prekinitev povezave v primeru napake
@@ -188,8 +187,7 @@ pravice <- function(){
   })
 }
 
-=======
->>>>>>> 5a2d89442937e3f0bb87242a13506fdbc9356da3
+
 pravice()
 delete_table()
 create_table()
