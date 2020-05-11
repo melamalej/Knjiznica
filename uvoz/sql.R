@@ -45,10 +45,9 @@ drv <- dbDriver("PostgreSQL")
     # ali pa po tem, ko se ta konča z napako
   #})
 
-<<<<<<< HEAD
+
 # Če tabela obstaja, jo zbrišemo
-=======
->>>>>>> c420ced5a52ce50c5fa37efa82c6cf29b469deed
+
 
 delete_table <- function(){
   tryCatch({
@@ -129,7 +128,6 @@ insert_data <- function(){
   })
 }
 
-<<<<<<< HEAD
 pravice <- function(){
   tryCatch({
     
@@ -159,8 +157,6 @@ pravice <- function(){
 }
 
 pravice()
-=======
->>>>>>> c420ced5a52ce50c5fa37efa82c6cf29b469deed
 delete_table()
 create_table()
 insert_data() 
