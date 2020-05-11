@@ -18,6 +18,7 @@ shinyServer(function(input, output, session) {
   # Pripravimo tabelo
   #tbl.transakcija <- tbl(conn, "transakcija")
   
+  tbl.books <- tbl(conn, "users")
   tbl.books <- tbl(conn, "books")
   tbl.transaction <- tbl(conn, "transaction")
   tbl.loan <- tbl(conn, "loan")
@@ -28,16 +29,16 @@ shinyServer(function(input, output, session) {
     dbDisconnect(conn)
   })
   
-  #output$transakcije <- renderTable({
+  output$transakcije <- renderTable({
     # Naredimo poizvedbo
     # x %>% f(y, ...) je ekvivalentno f(x, y, ...)
-    #t <- tbl.transakcija %>% filter(znesek > !!input$min) %>%
-      #arrange(znesek) %>% data.frame()
+    t <- tbl.transakcija %>% filter(znesek > !!input$min) %>%
+      arrange(znesek) %>% data.frame()
     # Čas izpišemo kot niz
-    #t$cas <- as.character(t$cas)
+    t$cas <- as.character(t$cas)
     # Vrnemo dobljeno razpredelnico
-    #t
-  #})
+    t
+  })
 
 })
 
