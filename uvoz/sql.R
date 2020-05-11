@@ -68,8 +68,7 @@ drv <- dbDriver("PostgreSQL")
   #dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
   #dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
   #dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
-  
-<<<<<<< HEAD
+
   dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2020_melam TO javnost",con=conn))
   dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost",con=conn))
   dbSendQuery(conn, build_sql("GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO javnost",con=conn))
