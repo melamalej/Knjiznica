@@ -46,6 +46,34 @@ tryCatch({
   })
 
 # Če tabela obstaja, jo zbrišemo
+pravice <- function(){
+  tryCatch({
+    
+    # Vzpostavimo povezavo
+    conn <- dbConnect(drv, dbname=db, host=host, user=user, password=password)
+    
+    dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2020_tjasam TO melam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2020_tjasam TO lanaz WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO melam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+    
+    dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2020_tjasam TO javnost",con=conn))
+    dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost",con=conn))
+
+    
+  }, finally = {
+    
+    dbDisconnect(conn) })
+}
+
+
+
 delete_table <- function(){
   tryCatch({
     conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password)
@@ -125,6 +153,7 @@ insert_data <- function(){
   })
 }
 
+<<<<<<< HEAD
 pravice <- function(){
   # Uporabimo tryCatch,(da se povežemo in bazo in odvežemo)
   # da prisilimo prekinitev povezave v primeru napake
@@ -159,6 +188,8 @@ pravice <- function(){
   })
 }
 
+=======
+>>>>>>> 5a2d89442937e3f0bb87242a13506fdbc9356da3
 pravice()
 delete_table()
 create_table()
