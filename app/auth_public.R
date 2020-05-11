@@ -1,4 +1,4 @@
-db = 'sem2020_tjasam'
+db = 'sem2020_melam'
 host = 'baza.fmf.uni-lj.si'
 user = 'javnost'
 password = 'javnogeslo'
