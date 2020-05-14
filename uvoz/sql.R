@@ -48,6 +48,45 @@ drv <- dbDriver("PostgreSQL")
 
 # Če tabela obstaja, jo zbrišemo
 
+<<<<<<< HEAD
+=======
+#pravice <- function(){tryCatch({
+  
+  #conn <- dbConnect(drv, dbname=db, host=host, user=user, password=password)
+  
+  #dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2020_melam TO tjasam WITH GRANT OPTION",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2020_melam TO lanaz WITH GRANT OPTION",con=conn))
+  
+  #dbSendQuery(conn, build_sql("GRANT ALL ON DATABASE sem2020_melam TO tjasam WITH GRANT OPTION",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT ALL ON DATABASE sem2020_melam TO lanaz WITH GRANT OPTION",con=conn))
+  
+  #dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+  
+  #dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
+  
+  #dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
+
+  #dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2020_melam TO javnost",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO javnost",con=conn))
+  #}, finally = {
+
+  #dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2020_melam TO javnost",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost",con=conn))
+  #dbSendQuery(conn, build_sql("GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO javnost",con=conn))
+  
+  #}, finally = {
+
+  
+  #dbDisconnect(conn) })
+#}
+
+>>>>>>> 8133cd48c06490e8ba3b53e8ca963f98762a91ee
 delete_table <- function(){
   tryCatch({
     conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password)
