@@ -127,21 +127,13 @@ create_table <- function(){
     
     transaction <- dbSendQuery(conn, build_sql("CREATE TABLE transaction (
                                         id text PRIMARY KEY,
+                                        kobissid text NOT NULL REFERENCES books(kobissid),
+                                        idnumber text NOT NULL REFERENCES users(idnumber),
                                         date_of_loan text NOT NULL,
-                                        date_of_return text NOT NULL,
+                                        date_of_return text,
                                         due_date text NOT NULL,
                                         arrears INTEGER NOT NULL
                                         )", con=conn))
-    
-    #tabele relacij:
-    
-    loan <- dbSendQuery(conn, build_sql("CREATE TABLE loan(
-                                        kobissid text NOT NULL REFERENCES books(kobissid),
-                                        id text NOT NULL REFERENCES transaction(id))", con=conn))
-    
-    make <- dbSendQuery(conn, build_sql("CREATE TABLE make(
-                                        idnumber text NOT NULL REFERENCES users(idnumber),
-                                        id text NOT NULL REFERENCES transaction(id))", con=conn))
     
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO lanaz",con=conn))
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO tjasam",con=conn))
@@ -150,7 +142,6 @@ create_table <- function(){
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO lanaz",con=conn))
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO tjasam",con=conn))
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO melam",con=conn))
-    
     
   }, finally = {
     dbDisconnect(conn) 
@@ -180,8 +171,12 @@ pravice <- function(){tryCatch({
   dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO tjasam",con=conn))
   dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO lanaz",con=conn))
   
+  dbSendQuery(conn, build_sql("GRANT DELETE ON ALL TABLES IN SCHEMA public TO lanaz",con=conn))
+  dbSendQuery(conn, build_sql("GRANT DELETE ON ALL TABLES IN SCHEMA public TO tjasam",con=conn))
+
   dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost",con=conn))
   dbSendQuery(conn, build_sql("GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO javnost",con=conn))
+  
   
 }, finally = {
   

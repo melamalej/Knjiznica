@@ -18,7 +18,7 @@ shinyServer(function(input, output, session) {
   # Pripravimo tabelo
   #tbl.transakcija <- tbl(conn, "transakcija")
   
-  tbl.books <- tbl(conn, "users")
+  tbl.users <- tbl(conn, "users")
   tbl.books <- tbl(conn, "books")
   tbl.transaction <- tbl(conn, "transaction")
   tbl.loan <- tbl(conn, "loan")
