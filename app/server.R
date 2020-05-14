@@ -15,14 +15,24 @@ drv <- dbDriver("PostgreSQL")
 shinyServer(function(input, output, session) {
   # Vzpostavimo povezavo
   conn <- dbConnect(drv, dbname=db, host=host, user=user, password=password, port=DB_PORT)
+  
+#------------------------------------------------  
+ 
+  #Prijava  
+  
+  
+  
+  
+  
+  
+#-------------------------------------------------  
+  
   # Pripravimo tabelo
   #tbl.transakcija <- tbl(conn, "transakcija")
   
   tbl.users <- tbl(conn, "users")
   tbl.books <- tbl(conn, "books")
   tbl.transaction <- tbl(conn, "transaction")
-  tbl.loan <- tbl(conn, "loan")
-  tbl.make <- tbl(conn, "make")
   
   # Povezava naj se prekine ob izhodu
   cancel.onSessionEnded <- session$onSessionEnded(function() {
