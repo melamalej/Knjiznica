@@ -1,64 +1,73 @@
 library(shiny)
 library(shinydashboard)
 
+#source("server.R")
+source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')
 
-shinyUI(dashboardPage(
- 
-  dashboardHeader(title = "Library"),
-  
-  dashboardSidebar(sidebarMenu(
-    menuItem("Home page", tabName = "naslovnica", icon = icon("home")),
-    menuItem("Books", tabName = "knjige", icon = icon("book")),
-    menuItem("Borrow a book", tabName = "izposoja", icon = icon("book-reader")),
-    menuItem("My loans", tabName = "profil", icon = icon("user")))),
-  
-  dashboardBody(
-    # Boxes need to be put in a row (or column)
-    tabItems(
-      # First tab content
-      tabItem(tabName = "naslovnica",
-              h2("Welcome to our library!")),
-      # Second tab content
-      tabItem(tabName = "knjige",
-              h2("Search by title or by author"), box('', textInput('text', 'Title'), textInput('text', 'Author'),
-                                             actionButton('isci', 'Search'))
-            ),
-      # Third tab content2
-      tabItem(tabName = "izposoja",
-              h2("Widgets tab content"), box('Vpis_zaposleni', textInput('text', 'User name'), textInput('text', 'Password'),
-                                             actionButton('vpis', 'Login'))), 
-      #tuki bi lahko mele možnost, da se vpiše samo knjižničarka, ker sam sebi itak ne morš izposodit knjige
-      
-      # Fourth tab content
-      tabItem(tabName = "profil",
-              h2("Widgets tab content"), box('Vpis_clan', textInput('text', 'User name'), textInput('text', 'Password'),
-                                             actionButton('vpis', 'Login')))
-      
-      # tuki bi mele pa možnost da se vpiše študent in pol vidi naprej svoj profil..Ko pritisneš login bi se ti desno izpisali podatki
-    )
-  )
-)
-)
+vpisniPanel <- tabPanel("SignIn", value="signIn",
+                   fluidPage( 
+                     titlePanel("Welcome to our library. Please sign in."),
+                     img(src = "naslovna.jpg", height = 140, width = 400),
+                     fluidRow(
+                       column(width = 12,
+                              align = "center",
+                              textInput("userName","User name", value= "", placeholder = "User name"),
+                              passwordInput("password","Password", value = "", placeholder = "Password"),
+                              actionButton("signin_btn", "Sign In")
+                              ))
+                     )
+                   )
 
+    
+shinyUI(fluidPage(
+  theme = shinytheme("cerulean"),
+  conditionalPanel(condition = "output.signUpBOOL!='1' && output.signUpBOOL!='2'",#&& false",
+                   vpisniPanel),
+  conditionalPanel(condition = "output.signUpBOOL=='2'",
+                   navbarPage('Library',
+                     tabPanel('Home',
+                              titlePanel('My online library.'),
+                              img(src = "izposoja.jpg", height = 140, width = 160)),
+                     tabPanel("Books",
+                              mainPanel(dataTableOutput("vse.knjige"))
+                              ),
+                     navbarMenu("Browse",
+                                tabPanel("By title",
+                                         textInput("text", "Enter title",placeholder = 'Search by title'),
+                                         actionButton(inputId ="search", label = "Search"),
+                                         dataTableOutput("sporocilo1")),
+                                tabPanel("By author",
+                                         textInput("author", "Enter author",placeholder = 'Search by author'),
+                                         actionButton(inputId ="search", label = "Search"),
+                                         dataTableOutput("sporocilo2")),
+                                tabPanel("By genre",
+                                         textInput("genre", "Enter genre",placeholder = 'Search by genre'),
+                                         actionButton(inputId ="search", label = "Search"),
+                                         dataTableOutput("sporocilo3"))
+                                                    ),
+                     navbarMenu("My profile",
+                                tabPanel("My loans",
+                                         titlePanel('My loans.')
+                                         #dataTableOutput()
+                                         ),
+                                tabPanel("Borrow",
+                                         titlePanel('Borrow books.'),
+                                         "Here you can borrow any available books by using their id. If
+                                                    you don't know it you can find it in section books.",
+                                         textInput("bookid", "Enter bookID"),
+                                         actionButton(inputId ="borrow", label = "borrow"),
+                                         textOutput("uspesnost")
+                                ),
+                                tabPanel("Return",
+                                         titlePanel("Return books."),
+                                         textInput("book", "Enter bookID"),
+                                         actionButton(inputId ="return", label = "return"),
+                                         textOutput("vrniti")
+                                         
+                                         )
+                                )
 
-
-
-#shinyUI(fluidPage(
-
-  #titlePanel("Knjiznica"),
-
-  #sidebarLayout(
-    #sidebarPanel(
-      #sliderInput("min",
-                  #"Minimalni znesek transakcije:",
-                  #min = -10000,
-                  #max = 10000,
-                  #value = 1000)
-    #),
-
-    #mainPanel(
-      #tableOutput("transakcije")
-    #)
-  #)
-#))
+                 )
+                 )
+  ))
 
