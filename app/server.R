@@ -2,7 +2,9 @@ library(shiny)
 library(dplyr)
 library(RPostgreSQL)
 
-source("auth_public.R")
+
+source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
+
 
 DB_PORT <- as.integer(Sys.getenv("POSTGRES_PORT"))
 if (is.na(DB_PORT)) {
@@ -102,9 +104,149 @@ if (is.na(DB_PORT)) {
     }
     )
  }
-  })
 
-# # ---------------
+#KNJIGE
+ #zavihek za tabelo vseh knjig
+  knjige<- reactive({
+    vse_knjige <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
+                                                        genre  AS \"Genre\",
+                                                        kobissid  AS \"book ID\",
+                                                        availability AS \"availability\"
+                                                        FROM books",con = conn)
+    data <- dbGetQuery(conn, vse_knjige)
+    data[, ]
+  })
+  output$vse.knjige <- renderDataTable({
+    knjige()
+    
+  })
+  
+ #iskanje po avtorju
+  observeEvent(input$search,{
+    naslov <- renderText({input$text})
+    shinyjs::reset("sporocilo1")
+  })
+  najdi.naslov <- reactive({
+    naslov <- input$text
+    sql_naslov <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
+                                                        genre  AS \"Genre\",
+                                                        kobissid  AS \"Book ID\",
+                                                        availability AS \"Availability\"
+                                                        FROM books WHERE title =",naslov, con = conn)
+    knjige_naslov <- dbGetQuery(conn, sql_naslov)
+    validate(need(nrow(knjige_naslov) > 0, "Sorry, we don't have a book whit this title"))
+    # validate(need( nrow(komentarji) == 0, "Spodaj so vaša že poslana sporočila" ))
+    knjige_naslov
+  })
+  
+  output$sporocilo1<- renderDataTable(datatable(najdi.naslov()) %>% formatStyle(columns = c('Book title', 'Author','Genre','Book ID','Availability'), color = 'grey') )
+  
+  #Iskanje po avtorju      Ko vpišeš avtorja avtomatično najde že preden klikneš search???
+  observeEvent(input$search,{
+    avtor <- renderText({input$author})
+    shinyjs::reset("sporocilo2")
+  })
+  najdi.avtor <- reactive({
+    avtor <- input$author
+    sql_avtor <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
+                                                        genre  AS \"Genre\",
+                                                        kobissid  AS \"Book ID\",
+                                                        availability AS \"Availability\"
+                                                        FROM books WHERE author =",avtor, con = conn)
+    knjige_avtor <- dbGetQuery(conn, sql_avtor)
+    validate(need(nrow(knjige_avtor) > 0, "Sorry, we don't have a book whit this title"))     #ko nič ne vpišeš že to piše, je treba popravit
+    # validate(need( nrow(komentarji) == 0, "Spodaj so vaša že poslana sporočila" ))     
+    knjige_avtor
+  })
+  
+  output$sporocilo2<- renderDataTable(datatable(najdi.avtor()) %>% formatStyle(columns = c('Book title', 'Author','Genre','Book ID','Availability'), color = 'grey') )
+  
+ #iskanje po žanru
+  observeEvent(input$search,{
+    zanr <- renderText({input$genre})
+    shinyjs::reset("sporocilo3")
+  })
+  najdi.zanr <- reactive({
+    zanr <- input$genre
+    sql_zanr <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
+                                                        genre  AS \"Genre\",
+                                                        kobissid  AS \"Book ID\",
+                                                        availability AS \"Availability\"
+                                                        FROM books WHERE genre =",zanr, con = conn)
+    knjige_zanr <- dbGetQuery(conn, sql_zanr)
+    validate(need(nrow(knjige_zanr) > 0, "Sorry, we don't have a book whit this title"))     #ko nič ne vpišeš že to piše, je treba popravit
+    # validate(need( nrow(komentarji) == 0, "Spodaj so vaša že poslana sporočila" ))     
+    knjige_zanr
+  })
+  
+  output$sporocilo3 <- renderDataTable(datatable(najdi.zanr()) %>% formatStyle(columns = c('Book title', 'Author','Genre','Book ID','Availability'), color = 'grey') )
+  
+  #--------------
+  #Izposodi knjigo
+  
+
+  observeEvent(input$borrow,{
+    idknjige <- renderText({input$bookid})
+    danasnji_datum <- Sys.Date()    #v SQL mi now() in CURDATE() ne delata pravilno
+    sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$bookid, con = conn)
+    id <- dbGetQuery(conn, sql_id)
+    if((id %>% pull(availability)) == 'yes'){
+      sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
+                        VALUES('1002',",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
+    #treba nastimat da se bo id transakcije sam generiral, če ga(id stolpca) ne napišem mi ne pusti ker ne sme biti NULL
+      #če bos dvakrat dala izposojo ne bo šlo čez ker se bo primary key ponovil,ročno spremeni tačs
+      sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
+                                      WHERE kobissid =" ,input$bookid, con = conn)    #spremeni razpoložljivost v books
+      zapis <- dbGetQuery(conn, sql_zapis)
+      razpolozljivost <- dbGetQuery(conn, sql_razpolozljivost)
+      zapis
+      razpolozljivost
+      output$uspesnost <- renderText({"The book was successfully borrowed."})
+    }
+    else{
+      output$uspesnost <- renderText({"Sorry, the book is not available."})
+    }
+    shinyjs::reset("bookid")
+  })
+  
+  
+  
+  #vrnitev
+  observeEvent(input$return,{
+    idknjige <- renderText({input$book})
+    danasnji<- Sys.Date() 
+    sql_Id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$book, con = conn)
+    Id <- dbGetQuery(conn, sql_Id)
+    if((Id %>% pull(availability)) == 'no'){
+      sql_zap <- build_sql("UPDATE transaction SET date_of_return = ",danasnji,"
+                             WHERE kobissid =",input$book,"AND date_of_return IS NULL", con = conn)     
+      sql_raz <- build_sql("UPDATE books SET availability = 'yes'
+                                      WHERE kobissid =" ,input$book, con = conn)    #spremeni razpoložljivost v books
+      zap <- dbGetQuery(conn, sql_zap)
+      razp <- dbGetQuery(conn, sql_raz)
+      zap
+      razp
+      output$vrniti <- renderText({"The book was successfully returned."})
+    }
+    else{
+      output$vrniti <- renderText({"Wrong bookID"})
+    }
+    shinyjs::reset("uspesnost")
+  })
+  #  output$uspesnost <- renderText({
+  #    idknjige <- renderText({input$bookid})
+  #    sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$bookid, con = conn)
+  #    id <- dbGetQuery(conn, sql_id)
+  #    if ((id %>% pull(availability)) == 'yes') {
+  #      "The book successfully borrowed"
+  #    } else {
+  #      "Sorry, the book is not available"
+  #    }
+  # })
+
+  
+  })
+# # -------------------------------------------------
 #   # Pripravimo tabelo
 #   #tbl.transakcija <- tbl(conn, "transakcija")
 #   
