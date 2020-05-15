@@ -2,7 +2,8 @@ library(shiny)
 library(shinydashboard)
 
 #source("server.R")
-source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')
+#source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')
+source('~/Knjiznica/lib/libraries.R')
 
 vpisniPanel <- tabPanel("SignIn", value="signIn",
                    fluidPage( 
