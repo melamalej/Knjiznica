@@ -129,10 +129,10 @@ create_table <- function(){
                                         id text PRIMARY KEY,
                                         kobissid text NOT NULL REFERENCES books(kobissid),
                                         idnumber text NOT NULL REFERENCES users(idnumber),
-                                        date_of_loan text NOT NULL,
-                                        date_of_return text,
-                                        due_date text NOT NULL,
-                                        arrears INTEGER NOT NULL
+                                        date_of_loan DATE NOT NULL,
+                                        date_of_return DATE,
+                                        due_date DATE NOT NULL,
+                                        arrears INTEGER
                                         )", con=conn))
     
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO lanaz",con=conn))
