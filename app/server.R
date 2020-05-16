@@ -268,23 +268,24 @@ if (is.na(DB_PORT)) {
   
   
   
-  #################################################################################3
-
-  #moje_izposoje <- reactive({ 
-    #sql_u <- build_sql("SELECT kobissid FROM transaction WHERE idnumber = ",uporabnik(),con = conn)
-    #u <- dbGetQuery(conn, sql_u)
-    #sql_naslovi_izposojenih <- build_sql("SELECT title.books, author.books FROM books 
-                                       #INNER JOIN sql_u ON sql_u.kobissid = books.kobissid", con = conn)
-    
-    #naslovi_izposojenih <- dbGetQuery(conn, sql_naslovi_izposojenih)
-    #naslovi_izposojenih[, ]
-    #u[, ]
-  #})
+  #################################################################################
   
-  #output$my_loans<- renderDataTable({
-    #moje_izposoje()
+  moje_izposoje <- reactive({ 
+    
+    sql_u <- build_sql("SELECT kobissid, date_of_loan, due_date, date_of_return, arrears FROM transaction WHERE idnumber = ",uporabnik(),con = conn)
+    u <- dbGetQuery(conn, sql_u)
+    
+    #sql_cela_tabela <- build_sql("SELECT sql_u.date_of_loan, sql_u.due_date, sql_u.date_of_return, books.title, books.author FROM sql_u 
+    #INNER JOIN books ON sql_u.kobissid=books.kobissid", con = conn)
+    #cela_tabela <- dbGetQuery(conn, sql_cela_tabela)
+    #cela_tabela[, ]
+    u[, ]
+  })
+  
+  output$my_loans<- renderDataTable({
+    moje_izposoje()
    
-  #})
+  })
     
     
   #id_trenutnega_uporabnika <- uporabnik()

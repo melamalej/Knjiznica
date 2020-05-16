@@ -50,7 +50,7 @@ shinyUI(fluidPage(
                      navbarMenu("My profile",
                                 tabPanel("My loans",
                                          titlePanel('My loans.'),
-                                         #dataTableOutput("my_loans")
+                                         dataTableOutput("my_loans")
                                          ),
                                 tabPanel("Borrow",
                                          titlePanel('Borrow books.'),
