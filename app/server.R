@@ -201,9 +201,6 @@ if (is.na(DB_PORT)) {
     if((id %>% pull(availability)) == 'yes'){
       sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
                         VALUES( ",trans,",",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
-    #treba nastimat da se bo id transakcije sam generiral, če ga(id stolpca) ne napišem mi ne pusti ker ne sme biti NULL
-      #če bos dvakrat dala izposojo ne bo šlo čez ker se bo primary key ponovil,ročno spremeni tačs
-      
       # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
       
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
@@ -211,8 +208,15 @@ if (is.na(DB_PORT)) {
       zapis <- dbGetQuery(conn, sql_zapis)
       razpolozljivost <- dbGetQuery(conn, sql_razpolozljivost)
       zapis
-      razpolozljivost
-      output$uspesnost <- renderText({"The book was successfully borrowed."})
+      razpolozljivost 
+      
+      naslov_knjige <- build_sql("SELECT title FROM books WHERE kobissid =",input$bookid, con = conn)
+      naslov <- dbGetQuery(conn, naslov_knjige)
+      n <- naslov %>% pull(title)
+      tekst <- sprintf("The book %s was successfully borrowed.", n)
+      
+      output$uspesnost <- renderPrint({tekst})
+      # Izpiše naslov knjige ampak kot stolpec Age of wrath, The ...
     }
     else{
       output$uspesnost <- renderText({"Sorry, the book is not available."})
