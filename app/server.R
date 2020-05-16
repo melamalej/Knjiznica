@@ -217,6 +217,7 @@ if (is.na(DB_PORT)) {
       
       output$uspesnost <- renderPrint({tekst})
       # Izpiše naslov knjige ampak kot stolpec Age of wrath, The ...
+   
     }
     else{
       output$uspesnost <- renderText({"Sorry, the book is not available."})
@@ -232,16 +233,26 @@ if (is.na(DB_PORT)) {
     danasnji<- Sys.Date() 
     sql_Id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$book, con = conn)
     Id <- dbGetQuery(conn, sql_Id)
+    
+    #sql_mora_vrnit <- build_sql("SELECT due_date FROM transaction WHERE kobissid =",input$book, con = conn)
+    #mora_vrniti <- dbGetQuery(conn, sql_mora_vrnit)
+    #bi_moral_vrniti <- mora_vrniti %>% pull(due_date)
+    
+    #zamuda <- danasnji - bi_moral_vrniti
+    #zamudnina <- zamuda * 0.5 
+      
     if((Id %>% pull(availability)) == 'no'){
       sql_zap <- build_sql("UPDATE transaction SET date_of_return = ",danasnji,"
-                             WHERE kobissid =",input$book,"AND date_of_return IS NULL", con = conn)     
+                             WHERE kobissid =",input$book,"AND date_of_return IS NULL", con = conn)
+      
       sql_raz <- build_sql("UPDATE books SET availability = 'yes'
                                       WHERE kobissid =" ,input$book, con = conn)    #spremeni razpoložljivost v books
       zap <- dbGetQuery(conn, sql_zap)
       razp <- dbGetQuery(conn, sql_raz)
       zap
       razp
-      output$vrniti <- renderText({"The book was successfully returned."})
+
+      output$vrniti <- renderPrint({"The book was successfully returned."})
     }
     else{
       output$vrniti <- renderText({"Wrong bookID"})
