@@ -4,7 +4,8 @@ library(RPostgreSQL)
 
 
 #source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
-source('~/Knjiznica/app/auth.R')   #lana 
+#source('~/Knjiznica/app/auth.R')   #lana 
+source('~/Documents/FAKS/OPB/Knjiznica/app/auth.R') 
 
 DB_PORT <- as.integer(Sys.getenv("POSTGRES_PORT"))
 if (is.na(DB_PORT)) {
