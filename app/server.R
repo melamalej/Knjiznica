@@ -191,11 +191,21 @@ if (is.na(DB_PORT)) {
     danasnji_datum <- Sys.Date()    #v SQL mi now() in CURDATE() ne delata pravilno
     sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$bookid, con = conn)
     id <- dbGetQuery(conn, sql_id)
+    
+    
+    trans <- floor(runif(1, 10000, 99999))
+    dosedanje_transakcije <- build_sql("SELECT id FROM transaction", con = conn)
+    dos_trans <- dbGetQuery(conn, dosedanje_transakcije)
+    if(trans %in% dos_trans$id) {trans <- round(runif(1, 10000, 99999))}
+    
     if((id %>% pull(availability)) == 'yes'){
       sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
-                        VALUES('1002',",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
+                        VALUES( ",trans,",",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
     #treba nastimat da se bo id transakcije sam generiral, če ga(id stolpca) ne napišem mi ne pusti ker ne sme biti NULL
       #če bos dvakrat dala izposojo ne bo šlo čez ker se bo primary key ponovil,ročno spremeni tačs
+      
+      # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
+      
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
                                       WHERE kobissid =" ,input$bookid, con = conn)    #spremeni razpoložljivost v books
       zapis <- dbGetQuery(conn, sql_zapis)
