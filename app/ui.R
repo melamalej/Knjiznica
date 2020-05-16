@@ -3,8 +3,8 @@ library(shinythemes)
 
 #source("server.R")
 #source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')
-#source('~/Knjiznica/lib/libraries.R')   #lana 
-source('~/Documents/FAKS/OPB/Knjiznica/lib/libraries.R')
+source('~/Knjiznica/lib/libraries.R')   #lana 
+#source('~/Documents/FAKS/OPB/Knjiznica/lib/libraries.R')
 
 vpisniPanel <- tabPanel("SignIn", value="signIn",
                    fluidPage( 
