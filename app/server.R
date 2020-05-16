@@ -4,8 +4,10 @@ library(RPostgreSQL)
 
 
 #source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
-source('~/Knjiznica/app/auth.R')   #lana 
+#source('~/Knjiznica/app/auth.R')   #lana 
 #source('~/Documents/FAKS/OPB/Knjiznica/app/auth.R') 
+
+source('~/Knjiznica/app/auth.R')
 
 DB_PORT <- as.integer(Sys.getenv("POSTGRES_PORT"))
 if (is.na(DB_PORT)) {
@@ -121,6 +123,8 @@ if (is.na(DB_PORT)) {
     knjige()
     
   })
+
+  
   
  #iskanje po avtorju
   observeEvent(input$search,{
@@ -259,6 +263,45 @@ if (is.na(DB_PORT)) {
     }
     shinyjs::reset("uspesnost")
   })
+  
+  
+  
+  
+  
+  #################################################################################3
+
+  #moje_izposoje <- reactive({ 
+    #sql_u <- build_sql("SELECT kobissid FROM transaction WHERE idnumber = ",uporabnik(),con = conn)
+    #u <- dbGetQuery(conn, sql_u)
+    #sql_naslovi_izposojenih <- build_sql("SELECT title.books, author.books FROM books 
+                                       #INNER JOIN sql_u ON sql_u.kobissid = books.kobissid", con = conn)
+    
+    #naslovi_izposojenih <- dbGetQuery(conn, sql_naslovi_izposojenih)
+    #naslovi_izposojenih[, ]
+    #u[, ]
+  #})
+  
+  #output$my_loans<- renderDataTable({
+    #moje_izposoje()
+   
+  #})
+    
+    
+  #id_trenutnega_uporabnika <- uporabnik()
+  
+  #sql_U <- build_sql("SELECT kobissid FROM transaction WHERE idnumber = ",id_trenutnega_uporabnika,"", con = conn)
+  #U <- dbGetQuery(conn, sql_U)
+  
+  #sql_naslovi_izposojenih <- build_sql("SELECT title.books, author.books FROM books 
+                                       #INNER JOIN sql_U ON kobissid.sql_U = kobissid.books", con = conn)
+  
+  
+  
+  
+
+  
+  
+  
   #  output$uspesnost <- renderText({
   #    idknjige <- renderText({input$bookid})
   #    sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$bookid, con = conn)
