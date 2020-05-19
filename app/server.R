@@ -3,8 +3,8 @@ library(dplyr)
 library(RPostgreSQL)
 
 
-#source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
-source('~/Knjiznica/app/auth.R')   #lana 
+source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
+#source('~/Knjiznica/app/auth.R')   #lana 
 
 DB_PORT <- as.integer(Sys.getenv("POSTGRES_PORT"))
 if (is.na(DB_PORT)) {
@@ -264,7 +264,7 @@ if (is.na(DB_PORT)) {
 #     # x %>% f(y, ...) je ekvivalentno f(x, y, ...)
 #     t <- tbl.transakcija %>% filter(znesek > !!input$min) %>%
 #       arrange(znesek) %>% data.frame()
-#     # Čas izpišemo kot niz
+
 #     t$cas <- as.character(t$cas)
 #     # Vrnemo dobljeno razpredelnico
 #     t

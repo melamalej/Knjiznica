@@ -2,8 +2,9 @@ library(shiny)
 library(shinydashboard)
 
 #source("server.R")
-#source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')
-source('~/Knjiznica/lib/libraries.R')   #lana 
+source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')  #Tjasa
+#source('~/Knjiznica/lib/libraries.R')   #lana 
+#Mela se ti poglej kako ti sourca mapo libraries, ne znam nastimas da usem dela enak source 
 
 vpisniPanel <- tabPanel("SignIn", value="signIn",
                    fluidPage( 
