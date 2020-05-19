@@ -3,8 +3,16 @@ library(dplyr)
 library(RPostgreSQL)
 
 
+<<<<<<< HEAD
 source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
 #source('~/Knjiznica/app/auth.R')   #lana 
+=======
+#source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
+#source('~/Knjiznica/app/auth.R')   #lana 
+#source('~/Documents/FAKS/OPB/Knjiznica/app/auth.R') 
+
+source('~/Knjiznica/app/auth.R')
+>>>>>>> 79df45f9bcb5a6e224ea3ac5e9102c92c78fc7db
 
 DB_PORT <- as.integer(Sys.getenv("POSTGRES_PORT"))
 if (is.na(DB_PORT)) {
@@ -120,6 +128,8 @@ if (is.na(DB_PORT)) {
     knjige()
     
   })
+
+  
   
  #iskanje po avtorju
   observeEvent(input$search,{
@@ -190,18 +200,33 @@ if (is.na(DB_PORT)) {
     danasnji_datum <- Sys.Date()    #v SQL mi now() in CURDATE() ne delata pravilno
     sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$bookid, con = conn)
     id <- dbGetQuery(conn, sql_id)
+    
+    
+    trans <- floor(runif(1, 10000, 99999))
+    dosedanje_transakcije <- build_sql("SELECT id FROM transaction", con = conn)
+    dos_trans <- dbGetQuery(conn, dosedanje_transakcije)
+    if(trans %in% dos_trans$id) {trans <- round(runif(1, 10000, 99999))}
+    
     if((id %>% pull(availability)) == 'yes'){
       sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
-                        VALUES('1002',",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
-    #treba nastimat da se bo id transakcije sam generiral, če ga(id stolpca) ne napišem mi ne pusti ker ne sme biti NULL
-      #če bos dvakrat dala izposojo ne bo šlo čez ker se bo primary key ponovil,ročno spremeni tačs
+                        VALUES( ",trans,",",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
+      # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
+      
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
                                       WHERE kobissid =" ,input$bookid, con = conn)    #spremeni razpoložljivost v books
       zapis <- dbGetQuery(conn, sql_zapis)
       razpolozljivost <- dbGetQuery(conn, sql_razpolozljivost)
       zapis
-      razpolozljivost
-      output$uspesnost <- renderText({"The book was successfully borrowed."})
+      razpolozljivost 
+      
+      naslov_knjige <- build_sql("SELECT title FROM books WHERE kobissid =",input$bookid, con = conn)
+      naslov <- dbGetQuery(conn, naslov_knjige)
+      n <- naslov %>% pull(title)
+      tekst <- sprintf("The book %s was successfully borrowed.", n)
+      
+      output$uspesnost <- renderPrint({tekst})
+      # Izpiše naslov knjige ampak kot stolpec Age of wrath, The ...
+   
     }
     else{
       output$uspesnost <- renderText({"Sorry, the book is not available."})
@@ -217,22 +242,72 @@ if (is.na(DB_PORT)) {
     danasnji<- Sys.Date() 
     sql_Id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$book, con = conn)
     Id <- dbGetQuery(conn, sql_Id)
+    
+    #sql_mora_vrnit <- build_sql("SELECT due_date FROM transaction WHERE kobissid =",input$book, con = conn)
+    #mora_vrniti <- dbGetQuery(conn, sql_mora_vrnit)
+    #bi_moral_vrniti <- mora_vrniti %>% pull(due_date)
+    
+    #zamuda <- danasnji - bi_moral_vrniti
+    #zamudnina <- zamuda * 0.5 
+      
     if((Id %>% pull(availability)) == 'no'){
       sql_zap <- build_sql("UPDATE transaction SET date_of_return = ",danasnji,"
-                             WHERE kobissid =",input$book,"AND date_of_return IS NULL", con = conn)     
+                             WHERE kobissid =",input$book,"AND date_of_return IS NULL", con = conn)
+      
       sql_raz <- build_sql("UPDATE books SET availability = 'yes'
                                       WHERE kobissid =" ,input$book, con = conn)    #spremeni razpoložljivost v books
       zap <- dbGetQuery(conn, sql_zap)
       razp <- dbGetQuery(conn, sql_raz)
       zap
       razp
-      output$vrniti <- renderText({"The book was successfully returned."})
+
+      output$vrniti <- renderPrint({"The book was successfully returned."})
     }
     else{
       output$vrniti <- renderText({"Wrong bookID"})
     }
     shinyjs::reset("uspesnost")
   })
+  
+  
+  
+  
+  
+  #################################################################################
+  
+  moje_izposoje <- reactive({ 
+    
+    sql_u <- build_sql("SELECT kobissid, date_of_loan, due_date, date_of_return, arrears FROM transaction WHERE idnumber = ",uporabnik(),con = conn)
+    u <- dbGetQuery(conn, sql_u)
+    
+    #sql_cela_tabela <- build_sql("SELECT sql_u.date_of_loan, sql_u.due_date, sql_u.date_of_return, books.title, books.author FROM sql_u 
+    #INNER JOIN books ON sql_u.kobissid=books.kobissid", con = conn)
+    #cela_tabela <- dbGetQuery(conn, sql_cela_tabela)
+    #cela_tabela[, ]
+    u[, ]
+  })
+  
+  output$my_loans<- renderDataTable({
+    moje_izposoje()
+   
+  })
+    
+    
+  #id_trenutnega_uporabnika <- uporabnik()
+  
+  #sql_U <- build_sql("SELECT kobissid FROM transaction WHERE idnumber = ",id_trenutnega_uporabnika,"", con = conn)
+  #U <- dbGetQuery(conn, sql_U)
+  
+  #sql_naslovi_izposojenih <- build_sql("SELECT title.books, author.books FROM books 
+                                       #INNER JOIN sql_U ON kobissid.sql_U = kobissid.books", con = conn)
+  
+  
+  
+  
+
+  
+  
+  
   #  output$uspesnost <- renderText({
   #    idknjige <- renderText({input$bookid})
   #    sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$bookid, con = conn)

@@ -1,10 +1,16 @@
 library(shiny)
-library(shinydashboard)
+library(shinythemes)
 
 #source("server.R")
+<<<<<<< HEAD
 source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')  #Tjasa
 #source('~/Knjiznica/lib/libraries.R')   #lana 
 #Mela se ti poglej kako ti sourca mapo libraries, ne znam nastimas da usem dela enak source 
+=======
+#source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')
+source('~/Knjiznica/lib/libraries.R')   #lana 
+#source('~/Documents/FAKS/OPB/Knjiznica/lib/libraries.R')
+>>>>>>> 79df45f9bcb5a6e224ea3ac5e9102c92c78fc7db
 
 vpisniPanel <- tabPanel("SignIn", value="signIn",
                    fluidPage( 
@@ -49,8 +55,8 @@ shinyUI(fluidPage(
                                                     ),
                      navbarMenu("My profile",
                                 tabPanel("My loans",
-                                         titlePanel('My loans.')
-                                         #dataTableOutput()
+                                         titlePanel('My loans.'),
+                                         dataTableOutput("my_loans")
                                          ),
                                 tabPanel("Borrow",
                                          titlePanel('Borrow books.'),
