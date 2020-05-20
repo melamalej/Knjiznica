@@ -1,18 +1,15 @@
 library(shiny)
 library(dplyr)
 library(RPostgreSQL)
+library(tidyr)    #za urejanje tabele v r
 
 
-<<<<<<< HEAD
 source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
 #source('~/Knjiznica/app/auth.R')   #lana 
-=======
 #source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
 #source('~/Knjiznica/app/auth.R')   #lana 
 #source('~/Documents/FAKS/OPB/Knjiznica/app/auth.R') 
-
-source('~/Knjiznica/app/auth.R')
->>>>>>> 79df45f9bcb5a6e224ea3ac5e9102c92c78fc7db
+#source('~/Knjiznica/app/auth.R')
 
 DB_PORT <- as.integer(Sys.getenv("POSTGRES_PORT"))
 if (is.na(DB_PORT)) {
@@ -193,7 +190,9 @@ if (is.na(DB_PORT)) {
   
   #--------------
   #Izposodi knjigo
-  
+  sql_naslovi <- build_sql("SELECT * FROM books", con = conn)
+  naslovi <- dbGetQuery(conn, sql_naslovi)
+  naslovi <- naslovi %>% separate('title', c("prvi","drugi"), ",")
 
   observeEvent(input$borrow,{
     idknjige <- renderText({input$bookid})
@@ -219,13 +218,24 @@ if (is.na(DB_PORT)) {
       zapis
       razpolozljivost 
       
-      naslov_knjige <- build_sql("SELECT title FROM books WHERE kobissid =",input$bookid, con = conn)
-      naslov <- dbGetQuery(conn, naslov_knjige)
-      n <- naslov %>% pull(title)
-      tekst <- sprintf("The book %s was successfully borrowed.", n)
+      
+      sql_naslovi <- build_sql("SELECT * FROM books", con = conn)
+      naslovi <- dbGetQuery(conn, sql_naslovi)
+      naslovi <- naslovi %>% separate('title', c("prvi","drugi"), ",")
+      naslov_knjige <- naslovi %>% filter(kobissid == input$bookid)
+      #build_sql("SELECT prvi,drugi FROM naslovi WHERE kobissid =",input$bookid, con = conn)
+      #naslov <- dbGetQuery(conn, naslov_knjige)
+      drugi_del <-naslov_knjige %>% pull(drugi)
+      if(is.na(drugi_del)){
+      n <- naslov_knjige %>% pull(prvi)
+      tekst <- sprintf("The book %s was successfully borrowed.", n)}
+      else {
+        m <- naslov_knjige %>% pull(drugi)
+        n <- naslov_knjige %>% pull(prvi)  
+        tekst <- sprintf("The book %s %s was successfully borrowed.", m,n)}
       
       output$uspesnost <- renderPrint({tekst})
-      # Izpiše naslov knjige ampak kot stolpec Age of wrath, The ...
+      # Izpiše naslov knjige ampak kot stolpec  ...
    
     }
     else{
@@ -243,15 +253,16 @@ if (is.na(DB_PORT)) {
     sql_Id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$book, con = conn)
     Id <- dbGetQuery(conn, sql_Id)
     
-    #sql_mora_vrnit <- build_sql("SELECT due_date FROM transaction WHERE kobissid =",input$book, con = conn)
-    #mora_vrniti <- dbGetQuery(conn, sql_mora_vrnit)
-    #bi_moral_vrniti <- mora_vrniti %>% pull(due_date)
+    sql_mora_vrnit <- build_sql("SELECT due_date FROM transaction WHERE kobissid =",input$book, con = conn)
+    mora_vrniti <- dbGetQuery(conn, sql_mora_vrnit)
+    bi_moral_vrniti <- mora_vrniti %>% pull(due_date)
     
-    #zamuda <- danasnji - bi_moral_vrniti
-    #zamudnina <- zamuda * 0.5 
-      
+    zamuda <- as.numeric(danasnji - bi_moral_vrniti)
+    if(zamuda <= 0){zamudnina <- 0}
+    else {zamudnina <- zamuda * 0.5}
+    
     if((Id %>% pull(availability)) == 'no'){
-      sql_zap <- build_sql("UPDATE transaction SET date_of_return = ",danasnji,"
+      sql_zap <- build_sql("UPDATE transaction SET date_of_return = ",danasnji,", arrears = ",zamudnina,"
                              WHERE kobissid =",input$book,"AND date_of_return IS NULL", con = conn)
       
       sql_raz <- build_sql("UPDATE books SET availability = 'yes'
@@ -270,14 +281,12 @@ if (is.na(DB_PORT)) {
   })
   
   
-  
-  
-  
   #################################################################################
-  
+  #Še ne dela treba pravilno JOINAT
   moje_izposoje <- reactive({ 
     
-    sql_u <- build_sql("SELECT kobissid, date_of_loan, due_date, date_of_return, arrears FROM transaction WHERE idnumber = ",uporabnik(),con = conn)
+    sql_u <- build_sql("SELECT kobissid AS \"BookID\", date_of_loan AS \"Date of loan\", due_date  AS \"Due date\", date_of_return AS \"Date of return\",
+    arrears AS \"Arrears\" FROM transaction RIGHT JOIN books ON transaction.kobissid = books.kobissid WHERE idnumber = ",uporabnik(), con = conn)
     u <- dbGetQuery(conn, sql_u)
     
     #sql_cela_tabela <- build_sql("SELECT sql_u.date_of_loan, sql_u.due_date, sql_u.date_of_return, books.title, books.author FROM sql_u 
@@ -302,8 +311,7 @@ if (is.na(DB_PORT)) {
                                        #INNER JOIN sql_U ON kobissid.sql_U = kobissid.books", con = conn)
   
   
-  
-  
+
 
   
   
