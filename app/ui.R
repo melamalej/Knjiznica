@@ -39,6 +39,7 @@ shinyUI(fluidPage(
                                 tabPanel("By title",
                                          textInput("text", "Enter title",placeholder = 'Search by title'),
                                          actionButton(inputId ="search", label = "Search"),
+                                         textOutput("napis"),
                                          dataTableOutput("sporocilo1")),
                                 tabPanel("By author",
                                          textInput("author", "Enter author",placeholder = 'Search by author'),
@@ -59,13 +60,13 @@ shinyUI(fluidPage(
                                          "Here you can borrow any available books by using their id. If
                                                     you don't know it you can find it in section books.",
                                          textInput("bookid", "Enter bookID"),
-                                         actionButton(inputId ="Borrow", label = "borrow"),
+                                         actionButton(inputId ="Borrow", label = "Borrow"),
                                          textOutput("uspesnost")
                                 ),
                                 tabPanel("Return",
                                          titlePanel("Return books."),
                                          textInput("book", "Enter bookID"),
-                                         actionButton(inputId ="Return", label = "return"),
+                                         actionButton(inputId ="Return", label = "Return"),
                                          textOutput("vrniti")
                                          
                                          )

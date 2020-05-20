@@ -1,6 +1,3 @@
-library(shiny)
-library(dplyr)
-library(RPostgreSQL)
 library(tidyr)    #za urejanje tabele v r
 
 
@@ -141,12 +138,16 @@ if (is.na(DB_PORT)) {
                                                         availability AS \"Availability\"
                                                         FROM books WHERE title =",naslov, con = conn)
     knjige_naslov <- dbGetQuery(conn, sql_naslov)
-    validate(need(nrow(knjige_naslov) > 0, "Sorry, we don't have a book whit this title"))
     knjige_naslov
+    
   })
-  
-  output$sporocilo1<- renderDataTable(datatable(najdi.naslov()))
-  
+#še vedno ne pomaga, če nič ni napisano piše sorry,...
+  output$napis <- renderText({if((count(najdi.naslov()) %>% pull()) <= 0){
+    "Sorry, we don't have a book with this title." }
+    else{
+      "Your search."}
+    })
+  output$sporocilo1<- renderDataTable(datatable(najdi.naslov()))  
   #Iskanje po avtorju      Ko vpišeš avtorja avtomatično najde že preden klikneš search???
   observeEvent(input$search,{
     avtor <- renderText({input$author})
