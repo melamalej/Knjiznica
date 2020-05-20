@@ -113,13 +113,13 @@ if (is.na(DB_PORT)) {
 #KNJIGE
  #zavihek za tabelo vseh knjig
   knjige<- reactive({
-    vse_knjige <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
+    sql_vse_knjige <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
                                                         genre  AS \"Genre\",
                                                         kobissid  AS \"book ID\",
                                                         availability AS \"availability\"
                                                         FROM books",con = conn)
-    data <- dbGetQuery(conn, vse_knjige)
-    data[, ]
+    vse_knjige <- dbGetQuery(conn, sql_vse_knjige)
+    vse_knjige[, ]
   })
   output$vse.knjige <- renderDataTable({
     knjige()
@@ -142,11 +142,10 @@ if (is.na(DB_PORT)) {
                                                         FROM books WHERE title =",naslov, con = conn)
     knjige_naslov <- dbGetQuery(conn, sql_naslov)
     validate(need(nrow(knjige_naslov) > 0, "Sorry, we don't have a book whit this title"))
-    # validate(need( nrow(komentarji) == 0, "Spodaj so vaša že poslana sporočila" ))
     knjige_naslov
   })
   
-  output$sporocilo1<- renderDataTable(datatable(najdi.naslov()) %>% formatStyle(columns = c('Book title', 'Author','Genre','Book ID','Availability'), color = 'grey') )
+  output$sporocilo1<- renderDataTable(datatable(najdi.naslov()))
   
   #Iskanje po avtorju      Ko vpišeš avtorja avtomatično najde že preden klikneš search???
   observeEvent(input$search,{
@@ -161,12 +160,10 @@ if (is.na(DB_PORT)) {
                                                         availability AS \"Availability\"
                                                         FROM books WHERE author =",avtor, con = conn)
     knjige_avtor <- dbGetQuery(conn, sql_avtor)
-    validate(need(nrow(knjige_avtor) > 0, "Sorry, we don't have a book whit this title"))     #ko nič ne vpišeš že to piše, je treba popravit
-    # validate(need( nrow(komentarji) == 0, "Spodaj so vaša že poslana sporočila" ))     
+    validate(need(nrow(knjige_avtor) > 0, "Sorry, we don't have a book whit this author"))     #ko nič ne vpišeš že to piše, je treba popravit
     knjige_avtor
   })
-  
-  output$sporocilo2<- renderDataTable(datatable(najdi.avtor()) %>% formatStyle(columns = c('Book title', 'Author','Genre','Book ID','Availability'), color = 'grey') )
+  output$sporocilo2<-renderDataTable(datatable(najdi.avtor()))
   
  #iskanje po žanru
   observeEvent(input$search,{
@@ -181,31 +178,27 @@ if (is.na(DB_PORT)) {
                                                         availability AS \"Availability\"
                                                         FROM books WHERE genre =",zanr, con = conn)
     knjige_zanr <- dbGetQuery(conn, sql_zanr)
-    validate(need(nrow(knjige_zanr) > 0, "Sorry, we don't have a book whit this title"))     #ko nič ne vpišeš že to piše, je treba popravit
-    # validate(need( nrow(komentarji) == 0, "Spodaj so vaša že poslana sporočila" ))     
+    validate(need(nrow(knjige_zanr) > 0, "Sorry, we don't have a book whit this genre"))     #ko nič ne vpišeš že to piše, je treba popravit
     knjige_zanr
   })
-  
-  output$sporocilo3 <- renderDataTable(datatable(najdi.zanr()) %>% formatStyle(columns = c('Book title', 'Author','Genre','Book ID','Availability'), color = 'grey') )
+  output$sporocilo3 <- renderDataTable(datatable(najdi.zanr()) )
   
   #--------------
   #Izposodi knjigo
-  sql_naslovi <- build_sql("SELECT * FROM books", con = conn)
-  naslovi <- dbGetQuery(conn, sql_naslovi)
-  naslovi <- naslovi %>% separate('title', c("prvi","drugi"), ",")
-
-  observeEvent(input$borrow,{
+  
+  observeEvent(input$Borrow,{
     idknjige <- renderText({input$bookid})
     danasnji_datum <- Sys.Date()    #v SQL mi now() in CURDATE() ne delata pravilno
     sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$bookid, con = conn)
     id <- dbGetQuery(conn, sql_id)
     
-    
+    #generiranje id knjige:
     trans <- floor(runif(1, 10000, 99999))
     dosedanje_transakcije <- build_sql("SELECT id FROM transaction", con = conn)
     dos_trans <- dbGetQuery(conn, dosedanje_transakcije)
     if(trans %in% dos_trans$id) {trans <- round(runif(1, 10000, 99999))}
     
+    #proces pri izposoji:
     if((id %>% pull(availability)) == 'yes'){
       sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
                         VALUES( ",trans,",",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
@@ -215,16 +208,17 @@ if (is.na(DB_PORT)) {
                                       WHERE kobissid =" ,input$bookid, con = conn)    #spremeni razpoložljivost v books
       zapis <- dbGetQuery(conn, sql_zapis)
       razpolozljivost <- dbGetQuery(conn, sql_razpolozljivost)
+      
       zapis
       razpolozljivost 
       
-      
+      #da se izpiše katero knjigo si si sposodil:
+      #(naslovi napisani čudno, kjer se začnejo s the je ločeno z vejico, 
+      #s tem ločimo v dva stolpca da se pravilno izpiše naslov ko se sposodi)
       sql_naslovi <- build_sql("SELECT * FROM books", con = conn)
       naslovi <- dbGetQuery(conn, sql_naslovi)
       naslovi <- naslovi %>% separate('title', c("prvi","drugi"), ",")
       naslov_knjige <- naslovi %>% filter(kobissid == input$bookid)
-      #build_sql("SELECT prvi,drugi FROM naslovi WHERE kobissid =",input$bookid, con = conn)
-      #naslov <- dbGetQuery(conn, naslov_knjige)
       drugi_del <-naslov_knjige %>% pull(drugi)
       if(is.na(drugi_del)){
       n <- naslov_knjige %>% pull(prvi)
@@ -245,28 +239,29 @@ if (is.na(DB_PORT)) {
   })
   
   
-  
   #vrnitev
-  observeEvent(input$return,{
+  observeEvent(input$Return,{
     idknjige <- renderText({input$book})
-    danasnji<- Sys.Date() 
-    sql_Id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$book, con = conn)
-    Id <- dbGetQuery(conn, sql_Id)
+    danasnji<- Sys.Date()
     
+    #racunanje zamudnine
     sql_mora_vrnit <- build_sql("SELECT due_date FROM transaction WHERE kobissid =",input$book, con = conn)
     mora_vrniti <- dbGetQuery(conn, sql_mora_vrnit)
     bi_moral_vrniti <- mora_vrniti %>% pull(due_date)
-    
     zamuda <- as.numeric(danasnji - bi_moral_vrniti)
     if(zamuda <= 0){zamudnina <- 0}
     else {zamudnina <- zamuda * 0.5}
     
-    if((Id %>% pull(availability)) == 'no'){
+    #preveri ce je knjiga sploh izposojena
+    sql_razp <- build_sql("SELECT availability FROM books WHERE kobissid =",input$book, con = conn)
+    razp <- dbGetQuery(conn, sql_razp)
+    #proces pri vrnitvi:
+    if((razp %>% pull(availability)) == 'no'){
       sql_zap <- build_sql("UPDATE transaction SET date_of_return = ",danasnji,", arrears = ",zamudnina,"
                              WHERE kobissid =",input$book,"AND date_of_return IS NULL", con = conn)
       
       sql_raz <- build_sql("UPDATE books SET availability = 'yes'
-                                      WHERE kobissid =" ,input$book, con = conn)    #spremeni razpoložljivost v books
+                                      WHERE kobissid =" ,input$book, con = conn)
       zap <- dbGetQuery(conn, sql_zap)
       razp <- dbGetQuery(conn, sql_raz)
       zap
@@ -282,17 +277,14 @@ if (is.na(DB_PORT)) {
   
   
   #################################################################################
-  #Še ne dela treba pravilno JOINAT
+  #ZDAJ DELA AMPAK NI Z JOIN, MOGOČE BI LAHKO RAJŠI Z LEFT JOIN AMPAK MI NI DELALO
+  #SPET KO VRNE SE V TABELI MYLOANS VIDI ŠELE KO REFRESHAS STRAN
+  
   moje_izposoje <- reactive({ 
-    
-    sql_u <- build_sql("SELECT kobissid AS \"BookID\", date_of_loan AS \"Date of loan\", due_date  AS \"Due date\", date_of_return AS \"Date of return\",
-    arrears AS \"Arrears\" FROM transaction RIGHT JOIN books ON transaction.kobissid = books.kobissid WHERE idnumber = ",uporabnik(), con = conn)
+    sql_u <- build_sql("SELECT transaction.kobissid AS \"BookID\",books.title AS \"Book title\", books.author AS \"Author\",
+transaction.date_of_loan AS \"Date of loan\",transaction. due_date  AS \"Due date\", date_of_return AS \"Date of return\",
+    arrears AS \"Arrears\" FROM transaction, books WHERE transaction.kobissid = books.kobissid AND transaction.idnumber = ",uporabnik(), con = conn)
     u <- dbGetQuery(conn, sql_u)
-    
-    #sql_cela_tabela <- build_sql("SELECT sql_u.date_of_loan, sql_u.due_date, sql_u.date_of_return, books.title, books.author FROM sql_u 
-    #INNER JOIN books ON sql_u.kobissid=books.kobissid", con = conn)
-    #cela_tabela <- dbGetQuery(conn, sql_cela_tabela)
-    #cela_tabela[, ]
     u[, ]
   })
   

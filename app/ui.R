@@ -11,7 +11,7 @@ source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')  #Tjasa
 vpisniPanel <- tabPanel("SignIn", value="signIn",
                    fluidPage( 
                      titlePanel("Welcome to our library. Please sign in."),
-                     img(src = "naslovna.jpg", height = 140, width = 400),
+                     img(src = "naslovna.jpg", height = 180, width = 800),
                      fluidRow(
                        column(width = 12,
                               align = "center",
@@ -24,14 +24,14 @@ vpisniPanel <- tabPanel("SignIn", value="signIn",
 
     
 shinyUI(fluidPage(
-  theme = shinytheme("cerulean"),
+  theme = shinytheme("spacelab"),
   conditionalPanel(condition = "output.signUpBOOL!='1' && output.signUpBOOL!='2'",#&& false",
                    vpisniPanel),
   conditionalPanel(condition = "output.signUpBOOL=='2'",
                    navbarPage('Library',
                      tabPanel('Home',
                               titlePanel('My online library.'),
-                              img(src = "izposoja.jpg", height = 140, width = 160)),
+                              img(src = "izposoja.jpg", height = 240, width = 260)),
                      tabPanel("Books",
                               mainPanel(dataTableOutput("vse.knjige"))
                               ),
@@ -59,13 +59,13 @@ shinyUI(fluidPage(
                                          "Here you can borrow any available books by using their id. If
                                                     you don't know it you can find it in section books.",
                                          textInput("bookid", "Enter bookID"),
-                                         actionButton(inputId ="borrow", label = "borrow"),
+                                         actionButton(inputId ="Borrow", label = "borrow"),
                                          textOutput("uspesnost")
                                 ),
                                 tabPanel("Return",
                                          titlePanel("Return books."),
                                          textInput("book", "Enter bookID"),
-                                         actionButton(inputId ="return", label = "return"),
+                                         actionButton(inputId ="Return", label = "return"),
                                          textOutput("vrniti")
                                          
                                          )
