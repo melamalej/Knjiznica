@@ -1,8 +1,8 @@
 # Nastavitvena datoteka za Binder
 FROM jaanos/appr:base-2019
 
-ENV PROJECT_DIR ${HOME}/OPB-shiny
-ENV PROJECT_FILE ${PROJECT_DIR}/OPB-shiny.Rproj
+ENV PROJECT_DIR ${HOME}/Knjiznica
+ENV PROJECT_FILE ${PROJECT_DIR}/Knjiznica.Rproj
 ENV PROJECT_INSTALL ${PROJECT_DIR}/install.R
 ENV PROJECT_GITCONFIG ${PROJECT_DIR}/gitconfig
 
