@@ -1,24 +1,10 @@
 library(tidyr)    #za urejanje tabele v r
 library(shiny)
-library(shinythemes)
-library(knitr)
 library(dplyr)
 library(dbplyr)
 library(hash)
-library(rvest)
-library(gsubfn)
-library(tibble)
-library(DT)
-library(shiny)
-library(dplyr)
-library(shiny)
-library(readxl)
 library(shinydashboard)
 library(RPostgreSQL)
-library(shinydashboard)
-library(shinyjs)
-library(shinyBS)
-library(DBI)
 library(bcrypt)
 library(digest)
 
@@ -106,7 +92,7 @@ if (is.na(DB_PORT)) {
      uporabnik <- username
      geslo <- (userTable %>% filter(username == uporabnik) %>% select(password) %>% collect())[[1]]
      #print(pass1)
-     #uporabnik vpise svoje originalno geslo, sistem pa ga prevede v hash in preveri,
+     #uporabnik vpise svoje originalno geslo, preveri,
      #ce se ujema s tabelo
      if(pass == geslo){
        obstoj <- 1
@@ -215,7 +201,7 @@ if (is.na(DB_PORT)) {
     sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",input$bookid, con = conn)
     id <- dbGetQuery(conn, sql_id)
     
-    #generiranje id knjige:
+    #generiranje id izposoje:
     trans <- floor(runif(1, 10000, 99999))
     dosedanje_transakcije <- build_sql("SELECT id FROM transaction", con = conn)
     dos_trans <- dbGetQuery(conn, dosedanje_transakcije)
