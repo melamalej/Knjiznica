@@ -1,9 +1,31 @@
 library(tidyr)    #za urejanje tabele v r
+library(shiny)
+library(shinythemes)
+library(knitr)
+library(dplyr)
+library(dbplyr)
+library(hash)
+library(rvest)
+library(gsubfn)
+library(tibble)
+library(DT)
+library(shiny)
+library(dplyr)
+library(shiny)
+library(readxl)
+library(shinydashboard)
+library(RPostgreSQL)
+library(shinydashboard)
+library(shinyjs)
+library(shinyBS)
+library(DBI)
+library(bcrypt)
+library(digest)
 
 
-source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
-#source('~/Knjiznica/app/auth.R')   #lana 
+source("auth_public.R")
 #source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
+#source('~/Knjiznica/app/auth.R')   #lana 
 #source('~/Knjiznica/app/auth.R')   #lana 
 #source('~/Documents/FAKS/OPB/Knjiznica/app/auth.R') 
 #source('~/Knjiznica/app/auth.R')

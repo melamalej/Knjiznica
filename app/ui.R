@@ -1,8 +1,28 @@
 library(shiny)
 library(shinythemes)
+library(knitr)
+library(dplyr)
+library(dbplyr)
+library(hash)
+library(rvest)
+library(gsubfn)
+library(tibble)
+library(DT)
+library(shiny)
+library(dplyr)
+library(shiny)
+library(readxl)
+library(shinydashboard)
+library(RPostgreSQL)
+library(shinydashboard)
+library(shinyjs)
+library(shinyBS)
+library(DBI)
+library(bcrypt)
+library(digest)
 
 #source("server.R")
-source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')  #Tjasa
+#source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')  #Tjasa
 #source('~/Knjiznica/lib/libraries.R')   #lana 
 #source('~/OPB/Knjiznica/Knjiznica/lib/libraries.R')
 #source('~/Knjiznica/lib/libraries.R')   #lana 
