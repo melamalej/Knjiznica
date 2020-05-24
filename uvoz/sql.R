@@ -135,13 +135,13 @@ create_table <- function(){
                                         arrears INTEGER
                                         )", con=conn))
     
-    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO lanaz",con=conn))
-    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO tjasam",con=conn))
-    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO melam",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
     
-    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO lanaz",con=conn))
-    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO tjasam",con=conn))
-    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO melam",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+    dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO melam WITH GRANT OPTION",con=conn))
     
   }, finally = {
     dbDisconnect(conn) 
@@ -165,17 +165,17 @@ pravice <- function(){tryCatch({
   
   conn <- dbConnect(drv, dbname=db, host=host, user=user, password=password)
   
-  dbSendQuery(conn, build_sql("GRANT ALL ON DATABASE sem2020_melam TO tjasam",con=conn))
-  dbSendQuery(conn, build_sql("GRANT ALL ON DATABASE sem2020_melam TO lanaz ",con=conn))
+  dbSendQuery(conn, build_sql("GRANT ALL ON DATABASE sem2020_melam TO tjasam WITH GRANT OPTION",con=conn))
+  dbSendQuery(conn, build_sql("GRANT ALL ON DATABASE sem2020_melam TO lanaz WITH GRANT OPTION",con=conn))
   
-  dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO tjasam",con=conn))
-  dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO lanaz",con=conn))
-  
-  dbSendQuery(conn, build_sql("GRANT DELETE ON ALL TABLES IN SCHEMA public TO lanaz",con=conn))
-  dbSendQuery(conn, build_sql("GRANT DELETE ON ALL TABLES IN SCHEMA public TO tjasam",con=conn))
+  dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO tjasam WITH GRANT OPTION",con=conn))
+  dbSendQuery(conn, build_sql("GRANT ALL ON SCHEMA public TO lanaz WITH GRANT OPTION",con=conn))
 
   dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost",con=conn))
   dbSendQuery(conn, build_sql("GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO javnost",con=conn))
+  dbSendQuery(conn, build_sql("GRANT INSERT ON TABLE transaction TO javnost",con=conn))
+  dbSendQuery(conn, build_sql("GRANT UPDATE ON TABLE transaction TO javnost",con=conn))
+  dbSendQuery(conn, build_sql("GRANT UPDATE ON TABLE books TO javnost",con=conn))
   
   
 }, finally = {

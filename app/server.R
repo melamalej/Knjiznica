@@ -10,11 +10,6 @@ library(digest)
 
 
 source("auth_public.R")
-#source('~/OPB/Knjiznica/Knjiznica/app/auth.R')    #tudi v app dodaj auth.R da lahko urejaš tabele, javnost ne more
-#source('~/Knjiznica/app/auth.R')   #lana 
-#source('~/Knjiznica/app/auth.R')   #lana 
-#source('~/Documents/FAKS/OPB/Knjiznica/app/auth.R') 
-#source('~/Knjiznica/app/auth.R')
 
 DB_PORT <- as.integer(Sys.getenv("POSTGRES_PORT"))
 if (is.na(DB_PORT)) {
@@ -133,13 +128,13 @@ if (is.na(DB_PORT)) {
 
   
   
- #iskanje po avtorju
-  observeEvent(input$search,{
-    naslov <- renderText({input$text})
-    shinyjs::reset("sporocilo1")
+ #iskanje po naslovu
+  observeEvent(input$gumb1,{
+    naslov <- renderText({input$title})
   })
+  
   najdi.naslov <- reactive({
-    naslov <- input$text
+    naslov <- input$title
     sql_naslov <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
                                                         genre  AS \"Genre\",
                                                         kobissid  AS \"Book ID\",
@@ -149,18 +144,30 @@ if (is.na(DB_PORT)) {
     knjige_naslov
     
   })
-#še vedno ne pomaga, če nič ni napisano piše sorry,...
-  output$napis <- renderText({if((count(najdi.naslov()) %>% pull()) <= 0){
-    "Sorry, we don't have a book with this title." }
-    else{
-      "Your search."}
-    })
-  output$sporocilo1<- renderDataTable(datatable(najdi.naslov()))  
-  #Iskanje po avtorju      Ko vpišeš avtorja avtomatično najde že preden klikneš search???
-  observeEvent(input$search,{
-    avtor <- renderText({input$author})
-    shinyjs::reset("sporocilo2")
+  
+  isci.naslov <- eventReactive(input$gumb1, {
+    najdi.naslov()
   })
+  
+  output$rezultat1 <- renderDataTable({
+    isci.naslov()
+  })
+  
+  isci.naslov.tekst <- eventReactive(input$gumb1, {
+    tabela <- data.frame(najdi.naslov())
+    if (nrow(tabela)!=0) paste("Books with title", input$title, ":")
+    else paste("Sorry, we do not have book with this title.")
+  })
+  
+  output$text1 <- renderText({
+    isci.naslov.tekst()
+  })  
+  
+  #Iskanje po avtorju      
+  observeEvent(input$gumb2,{
+    avtor <- renderText({input$author})
+  })
+  
   najdi.avtor <- reactive({
     avtor <- input$author
     sql_avtor <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
@@ -169,15 +176,30 @@ if (is.na(DB_PORT)) {
                                                         availability AS \"Availability\"
                                                         FROM books WHERE author =",avtor, con = conn)
     knjige_avtor <- dbGetQuery(conn, sql_avtor)
-    validate(need(nrow(knjige_avtor) > 0, "Sorry, we don't have a book whit this author"))     #ko nič ne vpišeš že to piše, je treba popravit
     knjige_avtor
   })
-  output$sporocilo2<-renderDataTable(datatable(najdi.avtor()))
+  
+  isci.avtor <- eventReactive(input$gumb2, {
+    najdi.avtor()
+  })
+  
+  output$rezultat2<-renderDataTable({
+    isci.avtor()
+  })
+  
+  isci.avtor.tekst <- eventReactive(input$gumb2, {
+    tabela <- data.frame(najdi.avtor())
+    if (nrow(tabela)!=0) paste("Books from author", input$author, ":")
+    else paste("Sorry, we do not have books from this author.")
+  })
+  
+  output$text2 <- renderText({
+    isci.avtor.tekst()
+  })  
   
  #iskanje po žanru
-  observeEvent(input$search,{
+  observeEvent(input$gumb3,{
     zanr <- renderText({input$genre})
-    shinyjs::reset("sporocilo3")
   })
   najdi.zanr <- reactive({
     zanr <- input$genre
@@ -187,10 +209,26 @@ if (is.na(DB_PORT)) {
                                                         availability AS \"Availability\"
                                                         FROM books WHERE genre =",zanr, con = conn)
     knjige_zanr <- dbGetQuery(conn, sql_zanr)
-    validate(need(nrow(knjige_zanr) > 0, "Sorry, we don't have a book whit this genre"))     #ko nič ne vpišeš že to piše, je treba popravit
     knjige_zanr
   })
-  output$sporocilo3 <- renderDataTable(datatable(najdi.zanr()) )
+  
+  isci.zanr <- eventReactive(input$gumb3, {
+    najdi.zanr()
+  })
+  
+  output$rezultat3 <- renderDataTable({
+    isci.zanr()
+  })  
+  
+  isci.zanr.tekst <- eventReactive(input$gumb3, {
+    tabela <- data.frame(najdi.zanr())
+    if (nrow(tabela)!=0) paste("Books in genre", input$genre, ":")
+    else paste("This genre does not exists.")
+  })
+  
+  output$text3 <- renderText({
+    isci.zanr.tekst()
+  })  
   
   #--------------
   #Izposodi knjigo
@@ -220,6 +258,8 @@ if (is.na(DB_PORT)) {
       
       zapis
       razpolozljivost 
+      shinyjs::reset("my_loans")
+      shinyjs::reset("vse.knjige")
       
       #da se izpiše katero knjigo si si sposodil:
       #(naslovi napisani čudno, kjer se začnejo s the je ločeno z vejico, 
