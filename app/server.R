@@ -3,7 +3,6 @@ library(shiny)
 library(dplyr)
 library(dbplyr)
 library(hash)
-library(shinydashboard)
 library(RPostgreSQL)
 library(bcrypt)
 library(digest)
@@ -112,7 +111,7 @@ if (is.na(DB_PORT)) {
 
 #KNJIGE
  #zavihek za tabelo vseh knjig
-  knjige<- reactive({
+  knjige <- reactive({
     sql_vse_knjige <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
                                                         genre  AS \"Genre\",
                                                         kobissid  AS \"book ID\",
@@ -123,10 +122,7 @@ if (is.na(DB_PORT)) {
   })
   output$vse.knjige <- renderDataTable({
     knjige()
-    
   })
-
-  
   
  #iskanje po naslovu
   observeEvent(input$gumb1,{
@@ -247,19 +243,15 @@ if (is.na(DB_PORT)) {
     
     #proces pri izposoji:
     if((id %>% pull(availability)) == 'yes'){
+      # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
       sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
                         VALUES( ",trans,",",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
-      # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
       
+      #spremeni razpoložljivost v books
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
-                                      WHERE kobissid =" ,input$bookid, con = conn)    #spremeni razpoložljivost v books
+                                      WHERE kobissid =" ,input$bookid, con = conn)
       zapis <- dbGetQuery(conn, sql_zapis)
       razpolozljivost <- dbGetQuery(conn, sql_razpolozljivost)
-      
-      zapis
-      razpolozljivost 
-      shinyjs::reset("my_loans")
-      shinyjs::reset("vse.knjige")
       
       #da se izpiše katero knjigo si si sposodil:
       #(naslovi napisani čudno, kjer se začnejo s the je ločeno z vejico, 
@@ -273,21 +265,27 @@ if (is.na(DB_PORT)) {
       n <- naslov_knjige %>% pull(prvi)
       tekst <- sprintf("The book %s was successfully borrowed.", n)}
       else {
-        m <- naslov_knjige %>% pull(drugi)
-        n <- naslov_knjige %>% pull(prvi)  
-        tekst <- sprintf("The book %s %s was successfully borrowed.", m,n)}
-      
+      m <- naslov_knjige %>% pull(drugi)
+      n <- naslov_knjige %>% pull(prvi)  
+      tekst <- sprintf("The book %s %s was successfully borrowed.", m,n)}
       output$uspesnost <- renderPrint({tekst})
-      # Izpiše naslov knjige ampak kot stolpec  ...
-   
-    }
-    else{
+       #Izpiše naslov knjige ampak kot stolpec  ...
+      }
+      else{
       output$uspesnost <- renderText({"Sorry, the book is not available."})
-    }
-    shinyjs::reset("bookid")
+      }
+      
+      zapis
+      razpolozljivost 
+      shinyjs::reset("my_loans")
+      shinyjs::reset("vse.knige") #ne posodobi
+    
+      })
+  
+  observeEvent(input$reset, {
+    shinyjs::reset("vse.knige")
   })
-  
-  
+    
   #vrnitev
   observeEvent(input$Return,{
     idknjige <- renderText({input$book})
@@ -327,7 +325,6 @@ if (is.na(DB_PORT)) {
   
   #################################################################################
   #ZDAJ DELA AMPAK NI Z JOIN, MOGOČE BI LAHKO RAJŠI Z LEFT JOIN AMPAK MI NI DELALO
-  #SPET KO VRNE SE V TABELI MYLOANS VIDI ŠELE KO REFRESHAS STRAN
   
   moje_izposoje <- reactive({ 
     sql_u <- build_sql("SELECT transaction.kobissid AS \"BookID\",books.title AS \"Book title\", books.author AS \"Author\",

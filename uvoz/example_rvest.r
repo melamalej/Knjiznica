@@ -26,6 +26,8 @@ names(newdata)[names(newdata)=="Title"] <- "title"
 names(newdata)[names(newdata)=="Author"] <- "author"
 names(newdata)[names(newdata)=="Genre"] <- "genre"
 
+newdata$author <- as.character(gsub(",", "", newdata$author))
+
 # Zapišemo v datoteko CSV
 #write_csv(newdata, "books.csv", na="")
 
@@ -36,6 +38,8 @@ names(uporabniki)[names(uporabniki)=="priimek"] <- "lastname"
 names(uporabniki)[names(uporabniki)=="naslov"] <- "adress"
 names(uporabniki)[names(uporabniki)=="uporabnisko_ime"] <- "username"
 names(uporabniki)[names(uporabniki)=="geslo"] <- "password"
+test <- c("111-11-1111","ime", "priimek","email","naslov", "test", "test")
+uporabniki <- rbind(uporabniki, test)
 
 
 # Nadomestimo decimalne vejice in ločila tisočic ter pretvorimo v števila

@@ -45,7 +45,8 @@ shinyUI(fluidPage(
                               titlePanel('My online library.'),
                               img(src = "izposoja.jpg", height = 240, width = 260)),
                      tabPanel("Books",
-                              mainPanel(dataTableOutput("vse.knjige"))
+                              mainPanel(dataTableOutput("vse.knjige"),
+                                        actionButton("reset", "Refresh"))
                               ),
                      navbarMenu("Browse",
                                 tabPanel("By title",
@@ -54,7 +55,7 @@ shinyUI(fluidPage(
                                          textOutput("text1"),
                                          dataTableOutput("rezultat1")),
                                 tabPanel("By author",
-                                         textInput("author", "Enter author",placeholder = 'Search by author'),
+                                         textInput("author", "Enter author (please put the lastname first)",placeholder = 'Search by author'),
                                          actionButton(inputId ="gumb2", label = "Search"),
                                          textOutput("text2"),
                                          dataTableOutput("rezultat2")),
