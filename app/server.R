@@ -24,7 +24,7 @@ if (is.na(DB_PORT)) {
   shinyServer(function(input, output, session) {
     # Vzpostavimo povezavo
     drv <- dbDriver("PostgreSQL")
-    conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password)
+    conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password,port=DB_PORT)
     userID <- reactiveVal()
     dbGetQuery(conn, "SET CLIENT_ENCODING TO 'utf8'; SET NAMES 'utf8'") #poskusim resiti tezave s sumniki
     cancel.onSessionEnded <- session$onSessionEnded(function() {
