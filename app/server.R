@@ -270,15 +270,17 @@ if (is.na(DB_PORT)) {
       tekst <- sprintf("The book %s %s was successfully borrowed.", m,n)}
       output$uspesnost <- renderPrint({tekst})
        #Izpiše naslov knjige ampak kot stolpec  ...
+      zapis
+      razpolozljivost 
+
       }
       else{
       output$uspesnost <- renderText({"Sorry, the book is not available."})
       }
       
-      zapis
-      razpolozljivost 
       shinyjs::reset("my_loans")
-      shinyjs::reset("vse.knige") #ne posodobi
+      shinyjs::reset("knjige()") #ne posodobi
+
     
       })
   
@@ -319,7 +321,8 @@ if (is.na(DB_PORT)) {
     else{
       output$vrniti <- renderText({"Wrong bookID"})
     }
-    shinyjs::reset("uspesnost")
+    shinyjs::reset("my_loans")
+    shinyjs::reset("knjige()")
   })
   
   
