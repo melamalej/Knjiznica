@@ -79,7 +79,7 @@ if (is.na(DB_PORT)) {
    uporabnikID <- NULL
     tryCatch({
      drv <- dbDriver("PostgreSQL")
-     conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password)
+     conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password, port = DB_PORT)
      userTable <- tbl(conn, "users")
      obstoj <- 0
      # obstoj = 0, ce username in geslo ne obstajata,  1 ce obstaja
