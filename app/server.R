@@ -108,6 +108,7 @@ if (is.na(DB_PORT)) {
     }
     )
  }
+ 
 
 #KNJIGE
  #zavihek za tabelo vseh knjig
@@ -322,7 +323,7 @@ if (is.na(DB_PORT)) {
       output$vrniti <- renderText({"Wrong bookID"})
     }
     shinyjs::reset("my_loans")
-    shinyjs::reset("knjige()")
+    shinyjs::reset("vse.knjige")  #ne dela
   })
   
   
