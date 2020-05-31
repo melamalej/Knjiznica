@@ -46,10 +46,6 @@ shinyUI(fluidPage(
                               img(src = "izposoja.jpg", height = 240, width = 260)),
                      tabPanel("Books",
                               mainPanel(dataTableOutput("vse.knjige"))
-<<<<<<< HEAD
-                                        
-=======
->>>>>>> 18f5ccf65fe8629bab4d30f83f277dc0c6134b4e
                               ),
                      navbarMenu("Browse",
                                 tabPanel("By title",

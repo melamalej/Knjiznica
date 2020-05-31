@@ -286,13 +286,9 @@ if (is.na(DB_PORT)) {
     else{
       output$uspesnost <- renderText({"Sorry, the book is not available."})
       }
-<<<<<<< HEAD
-=======
-      
+
       shinyjs::reset("my_loans")
       shinyjs::reset("knjige()") #ne posodobi
-
->>>>>>> 18f5ccf65fe8629bab4d30f83f277dc0c6134b4e
     
     })
     
@@ -330,7 +326,6 @@ if (is.na(DB_PORT)) {
     else{
       output$vrniti <- renderText({"Wrong bookID"})
     }
-<<<<<<< HEAD
     
     if(zamuda > 0){
       showModal(modalDialog(
@@ -340,10 +335,10 @@ if (is.na(DB_PORT)) {
       footer = actionButton("Pay", "Pay")))
     }
     else{}
-=======
+    
     shinyjs::reset("my_loans")
     shinyjs::reset("vse.knjige")  #ne dela
->>>>>>> 18f5ccf65fe8629bab4d30f83f277dc0c6134b4e
+
   })
   
   observeEvent(input$Pay, {
