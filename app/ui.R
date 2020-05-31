@@ -45,8 +45,8 @@ shinyUI(fluidPage(
                               titlePanel('My online library.'),
                               img(src = "izposoja.jpg", height = 240, width = 260)),
                      tabPanel("Books",
-                              mainPanel(dataTableOutput("vse.knjige"),
-                                        actionButton("reset", "Refresh"))
+                              mainPanel(dataTableOutput("vse.knjige"))
+                                        
                               ),
                      navbarMenu("Browse",
                                 tabPanel("By title",
@@ -82,7 +82,8 @@ shinyUI(fluidPage(
                                          titlePanel("Return books."),
                                          textInput("book", "Enter bookID"),
                                          actionButton(inputId ="Return", label = "Return"),
-                                         textOutput("vrniti")
+                                         textOutput("vrniti"),
+                                         textOutput("print")
                                          
                                          )
                                 )

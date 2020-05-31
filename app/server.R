@@ -30,14 +30,18 @@ if (is.na(DB_PORT)) {
     cancel.onSessionEnded <- session$onSessionEnded(function() {
       dbDisconnect(conn) #ko zapremo shiny naj se povezava do baze zapre
     })
+    
     output$signUpBOOL <- eventReactive(input$signup_btn, 1)
     outputOptions(output, 'signUpBOOL', suspendWhenHidden=FALSE)  # Da omogoca skrivanje/odkrivanje
     observeEvent(input$signup_btn, output$signUpBOOL <- eventReactive(input$signup_btn, 1))
+    
+    #funkcija uporabnik
     uporabnik <- reactive({
       user <- userID()
       validate(need(!is.null(user), "Potrebna je prijava!"))
       user
       })
+    
  #------------------------------------------------------------------------------------------------- 
     #protokol pri vpisu
  observeEvent(input$signin_btn,
@@ -67,6 +71,7 @@ if (is.na(DB_PORT)) {
               }
               })
  
+    
  # sign in funkcija
  sign.in.user <- function(username, pass){
    # Return a list. In the first place is an indicator of success:
@@ -245,13 +250,16 @@ if (is.na(DB_PORT)) {
     if((id %>% pull(availability)) == 'yes'){
       # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
       sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
-                        VALUES( ",trans,",",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 7,")", con = conn)     
-      
+                        VALUES( ",trans,",",input$bookid,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 1,")", con = conn)     
       #spremeni razpoložljivost v books
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
                                       WHERE kobissid =" ,input$bookid, con = conn)
       zapis <- dbGetQuery(conn, sql_zapis)
       razpolozljivost <- dbGetQuery(conn, sql_razpolozljivost)
+      
+      zapis
+      razpolozljivost 
+      shinyjs::reset("my_loans")
       
       #da se izpiše katero knjigo si si sposodil:
       #(naslovi napisani čudno, kjer se začnejo s the je ločeno z vejico, 
@@ -271,20 +279,11 @@ if (is.na(DB_PORT)) {
       output$uspesnost <- renderPrint({tekst})
        #Izpiše naslov knjige ampak kot stolpec  ...
       }
-      else{
+    else{
       output$uspesnost <- renderText({"Sorry, the book is not available."})
       }
-      
-      zapis
-      razpolozljivost 
-      shinyjs::reset("my_loans")
-      shinyjs::reset("vse.knige") #ne posodobi
     
-      })
-  
-  observeEvent(input$reset, {
-    shinyjs::reset("vse.knige")
-  })
+    })
     
   #vrnitev
   observeEvent(input$Return,{
@@ -313,15 +312,29 @@ if (is.na(DB_PORT)) {
       razp <- dbGetQuery(conn, sql_raz)
       zap
       razp
-
       output$vrniti <- renderPrint({"The book was successfully returned."})
+      shinyjs::reset("my_loans")
+      shinyjs::reset("vse.knige")
     }
     else{
       output$vrniti <- renderText({"Wrong bookID"})
     }
-    shinyjs::reset("uspesnost")
+    
+    if(zamuda > 0){
+      showModal(modalDialog(
+      title = "You need to pay arreas",
+      paste0("You have exceeded your due date."),
+      easyClose = TRUE,
+      footer = actionButton("Pay", "Pay")))
+    }
+    else{}
   })
   
+  observeEvent(input$Pay, {
+    output$print <- renderPrint({
+      "Printing receipt. Please pay at the cash register."
+    })
+  })
   
   #################################################################################
   #ZDAJ DELA AMPAK NI Z JOIN, MOGOČE BI LAHKO RAJŠI Z LEFT JOIN AMPAK MI NI DELALO
