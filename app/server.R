@@ -24,7 +24,7 @@ if (is.na(DB_PORT)) {
   shinyServer(function(input, output, session) {
     # Vzpostavimo povezavo
     drv <- dbDriver("PostgreSQL")
-    conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password)
+    conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password,port=DB_PORT)
     userID <- reactiveVal()
     dbGetQuery(conn, "SET CLIENT_ENCODING TO 'utf8'; SET NAMES 'utf8'") #poskusim resiti tezave s sumniki
     cancel.onSessionEnded <- session$onSessionEnded(function() {
@@ -84,7 +84,7 @@ if (is.na(DB_PORT)) {
    uporabnikID <- NULL
     tryCatch({
      drv <- dbDriver("PostgreSQL")
-     conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password)
+     conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password, port = DB_PORT)
      userTable <- tbl(conn, "users")
      obstoj <- 0
      # obstoj = 0, ce username in geslo ne obstajata,  1 ce obstaja
@@ -113,6 +113,7 @@ if (is.na(DB_PORT)) {
     }
     )
  }
+ 
 
 #KNJIGE
  #zavihek za tabelo vseh knjig
@@ -278,10 +279,20 @@ if (is.na(DB_PORT)) {
       tekst <- sprintf("The book %s %s was successfully borrowed.", m,n)}
       output$uspesnost <- renderPrint({tekst})
        #Izpiše naslov knjige ampak kot stolpec  ...
+      zapis
+      razpolozljivost 
+
       }
     else{
       output$uspesnost <- renderText({"Sorry, the book is not available."})
       }
+<<<<<<< HEAD
+=======
+      
+      shinyjs::reset("my_loans")
+      shinyjs::reset("knjige()") #ne posodobi
+
+>>>>>>> 18f5ccf65fe8629bab4d30f83f277dc0c6134b4e
     
     })
     
@@ -319,6 +330,7 @@ if (is.na(DB_PORT)) {
     else{
       output$vrniti <- renderText({"Wrong bookID"})
     }
+<<<<<<< HEAD
     
     if(zamuda > 0){
       showModal(modalDialog(
@@ -328,6 +340,10 @@ if (is.na(DB_PORT)) {
       footer = actionButton("Pay", "Pay")))
     }
     else{}
+=======
+    shinyjs::reset("my_loans")
+    shinyjs::reset("vse.knjige")  #ne dela
+>>>>>>> 18f5ccf65fe8629bab4d30f83f277dc0c6134b4e
   })
   
   observeEvent(input$Pay, {

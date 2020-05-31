@@ -36,7 +36,7 @@ vpisniPanel <- tabPanel("SignIn", value="signIn",
 
     
 shinyUI(fluidPage(
-  theme = shinytheme("spacelab"),
+  theme = shinytheme("cerulean"),
   conditionalPanel(condition = "output.signUpBOOL!='1' && output.signUpBOOL!='2'",#&& false",
                    vpisniPanel),
   conditionalPanel(condition = "output.signUpBOOL=='2'",
@@ -46,24 +46,25 @@ shinyUI(fluidPage(
                               img(src = "izposoja.jpg", height = 240, width = 260)),
                      tabPanel("Books",
                               mainPanel(dataTableOutput("vse.knjige"))
+<<<<<<< HEAD
                                         
+=======
+>>>>>>> 18f5ccf65fe8629bab4d30f83f277dc0c6134b4e
                               ),
                      navbarMenu("Browse",
                                 tabPanel("By title",
-                                         textInput("title", "Enter title",placeholder = 'Search by title'),
-                                         actionButton(inputId ="gumb1", label = "Search"),
-                                         textOutput("text1"),
-                                         dataTableOutput("rezultat1")),
+                                         textInput("text", "Enter title",placeholder = 'Search by title'),
+                                         actionButton(inputId ="search", label = "Search"),
+                                         textOutput("napis"),
+                                         dataTableOutput("sporocilo1")),
                                 tabPanel("By author",
-                                         textInput("author", "Enter author (please put the lastname first)",placeholder = 'Search by author'),
-                                         actionButton(inputId ="gumb2", label = "Search"),
-                                         textOutput("text2"),
-                                         dataTableOutput("rezultat2")),
+                                         textInput("author", "Enter author",placeholder = 'Search by author'),
+                                         actionButton(inputId ="search", label = "Search"),
+                                         dataTableOutput("sporocilo2")),
                                 tabPanel("By genre",
                                          textInput("genre", "Enter genre",placeholder = 'Search by genre'),
-                                         actionButton(inputId ="gumb3", label = "Search"),
-                                         textOutput("text3"),
-                                         dataTableOutput("rezultat3"))
+                                         actionButton(inputId ="search", label = "Search"),
+                                         dataTableOutput("sporocilo3"))
                                                     ),
                      navbarMenu("My profile",
                                 tabPanel("My loans",
