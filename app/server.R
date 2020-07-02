@@ -7,7 +7,6 @@ library(RPostgreSQL)
 library(bcrypt)
 library(digest)
 
-
 source("auth_public.R")
 
 DB_PORT <- as.integer(Sys.getenv("POSTGRES_PORT"))
@@ -126,9 +125,16 @@ if (is.na(DB_PORT)) {
     vse_knjige <- dbGetQuery(conn, sql_vse_knjige)
     vse_knjige[, ]
   })
+
+  
+  #Tuki not je dodana koda za gumbe
+
   output$vse.knjige <- renderDataTable({
-    knjige()
+    kn <- knjige()
+    kn[['Actions']] <- paste0('<button type="button" class="btn" id=borrow_',1:nrow(kn),'>Borrow</button> ')
+    datatable(kn, escape=F)
   })
+
   
  #iskanje po naslovu
   observeEvent(input$gumb1,{
