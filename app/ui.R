@@ -10,7 +10,6 @@ library(tibble)
 library(DT)
 library(shiny)
 library(dplyr)
-library(shinydashboard)
 library(RPostgreSQL)
 library(shinyjs)
 library(shinyBS)
@@ -36,6 +35,7 @@ vpisniPanel <- tabPanel("SignIn", value="signIn",
 
     
 shinyUI(fluidPage(
+  shinyjs::useShinyjs(),
   theme = shinytheme("cerulean"),
   conditionalPanel(condition = "output.signUpBOOL!='1' && output.signUpBOOL!='2'",#&& false",
                    vpisniPanel),
@@ -45,7 +45,7 @@ shinyUI(fluidPage(
                               titlePanel('My online library.'),
                               img(src = "izposoja.jpg", height = 240, width = 260)),
                      tabPanel("Books",
-                              mainPanel(dataTableOutput("vse.knjige"))
+                              mainPanel(DT::dataTableOutput(outputId ="vse.knjige"))
                               ),
                      navbarMenu("Browse",
                                 tabPanel("By title",
@@ -61,31 +61,19 @@ shinyUI(fluidPage(
                                          textInput("genre", "Enter genre",placeholder = 'Search by genre'),
                                          actionButton(inputId ="search", label = "Search"),
                                          dataTableOutput("sporocilo3"))
-                                                    ),
-                     navbarMenu("My profile",
-                                tabPanel("My loans",
-                                         titlePanel('My loans.'),
-                                         dataTableOutput("my_loans")
-                                         ),
-                                tabPanel("Borrow",
-                                         titlePanel('Borrow books.'),
-                                         "Here you can borrow any available books by using their id. If
-                                                    you don't know it you can find it in section books.",
-                                         textInput("bookid", "Enter bookID"),
-                                         actionButton(inputId ="Borrow", label = "Borrow"),
-                                         textOutput("uspesnost")
                                 ),
-                                tabPanel("Return",
-                                         titlePanel("Return books."),
-                                         textInput("book", "Enter bookID"),
-                                         actionButton(inputId ="Return", label = "Return"),
-                                         textOutput("vrniti"),
-                                         textOutput("print")
-                                         
-                                         )
+                     navbarMenu("My profile",
+                                tabPanel("Active loans",
+                                         titlePanel('Active loans'),
+                                         DT::dataTableOutput(outputId ="active_loans")
+                                         ),
+                                tabPanel("Returned books",
+                                         titlePanel('Returned books'),
+                                         DT::dataTableOutput(outputId ="returned_books")
+                                )
                                 )
 
                  )
-                 )
+                )
   ))
 
