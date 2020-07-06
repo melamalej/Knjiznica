@@ -121,13 +121,13 @@ create_table <- function(){
                                         title text NOT NULL,
                                         author text NOT NULL,
                                         genre text NOT NULL,
-                                        kobissid text PRIMARY KEY,
+                                        kobissid INTEGER PRIMARY KEY,
                                         availability text NOT NULL
                                         )", con=conn))
     
     transaction <- dbSendQuery(conn, build_sql("CREATE TABLE transaction (
-                                        id text PRIMARY KEY,
-                                        kobissid text NOT NULL REFERENCES books(kobissid),
+                                        id SERIAL PRIMARY KEY,
+                                        kobissid INTEGER NOT NULL REFERENCES books(kobissid),
                                         idnumber text NOT NULL REFERENCES users(idnumber),
                                         date_of_loan DATE NOT NULL,
                                         date_of_return DATE,
