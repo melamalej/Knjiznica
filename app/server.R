@@ -131,7 +131,10 @@ if (is.na(DB_PORT)) {
    inputs
  }
  
+ stevec <- reactiveVal(0)
+ 
   knjige <- reactive({
+    stevec()
     sql_vse_knjige <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\", 
                                                         genre  AS \"Genre\",
                                                         availability AS \"availability\",
@@ -146,11 +149,9 @@ if (is.na(DB_PORT)) {
     ))
   })
   
-  #Tuki not je dodana koda za gumbe
-
   output$vse.knjige <- renderDataTable({
-    knjige()
-    }, escape=F)
+    knjige() %>% select(-ID)
+  }, escape=F)
   
   #Izposodi knjigo
   
@@ -162,21 +163,23 @@ if (is.na(DB_PORT)) {
     idbook <- knjige()[selectedRow,5]
     idbook <- as.character(idbook)
     
+    stevec(stevec()+1)
+    
     danasnji_datum <- Sys.Date()    #v SQL mi now() in CURDATE() ne delata pravilno
     sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",idbook, con = conn)
     id <- dbGetQuery(conn, sql_id)
     
     #generiranje id izposoje:
-    trans <- floor(runif(1, 10000, 99999))
-    dosedanje_transakcije <- build_sql("SELECT id FROM transaction", con = conn)
-    dos_trans <- dbGetQuery(conn, dosedanje_transakcije)
-    if(trans %in% dos_trans$id) {trans <- round(runif(1, 10000, 99999))}
+    # trans <- floor(runif(1, 10000, 99999))
+    # dosedanje_transakcije <- build_sql("SELECT id FROM transaction", con = conn)
+    # dos_trans <- dbGetQuery(conn, dosedanje_transakcije)
+    # if(trans %in% dos_trans$id) {trans <- round(runif(1, 10000, 99999))}
     
     #proces pri izposoji:
     if((id %>% pull(availability)) == 'yes'){
       # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
       sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
-                        VALUES( ",trans,",",idbook,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 1,")", con = conn)     
+                        VALUES( ,",idbook,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 1,")", con = conn)     
       #spremeni razpoložljivost v books
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
                                       WHERE kobissid =" ,idbook, con = conn)
@@ -338,7 +341,8 @@ if (is.na(DB_PORT)) {
   
   #TABELA IZPOSOJENIH KNJIG
   
-  moje_izposoje <- reactive({ 
+  moje_izposoje <- reactive({
+    stevec()
     sql_u <- build_sql("SELECT books.title AS \"Book title\", books.author AS \"Author\",
     transaction.date_of_loan AS \"Date of loan\",transaction. due_date  AS \"Due date\", transaction.kobissid AS \"BookID\"
     FROM transaction, books WHERE transaction.kobissid = books.kobissid AND
@@ -387,6 +391,7 @@ if (is.na(DB_PORT)) {
       zap
       razp
       output$vrniti <- renderPrint({"The book was successfully returned."})
+      stevec(stevec()+1)
       shinyjs::reset("my_loans")
       shinyjs::reset("vse.knige")
     }
@@ -442,7 +447,7 @@ if (is.na(DB_PORT)) {
   #------------------------------------------------------------------------------------------------- 
   
   #TABELA VRNJENIH KNJIG
-  vrnjene_knjige <- reactive({ 
+  vrnjene_knjige <- reactive({
     sql_u <- build_sql("SELECT books.title AS \"Book title\", books.author AS \"Author\",
 transaction.date_of_loan AS \"Date of loan\",transaction. due_date  AS \"Due date\", date_of_return AS \"Date of return\",
     arrears AS \"Arrears\" FROM transaction, books WHERE transaction.kobissid = books.kobissid AND date_of_return  IS NOT NULL AND transaction.idnumber = ",uporabnik(), con = conn)
