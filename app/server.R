@@ -17,6 +17,7 @@ if (is.na(DB_PORT)) {
 }
 
 
+
 # # Povežemo se z gonilnikom za PostgreSQL
 # drv <- dbDriver("PostgreSQL")
 # 
@@ -120,7 +121,7 @@ if (is.na(DB_PORT)) {
 
  # TABELA KNJIG
  #zavihek za tabelo vseh knjig
- myValue <- reactiveValues()
+ #myValue <- reactiveValues()
  
  shinyInput <- function(FUN, len, id, ...) {
    inputs <- character(len)
