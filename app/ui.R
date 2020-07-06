@@ -40,10 +40,16 @@ shinyUI(fluidPage(
   conditionalPanel(condition = "output.signUpBOOL!='1' && output.signUpBOOL!='2'",#&& false",
                    vpisniPanel),
   conditionalPanel(condition = "output.signUpBOOL=='2'",
-                   navbarPage('Library',
+                   navbarPage('Library', 
                      tabPanel('Home',
                               titlePanel('My online library.'),
-                              img(src = "izposoja.jpg", height = 240, width = 260)),
+                              img(src = "izposoja.jpg", height = 240, width = 260),
+                              tags$li(actionButton(
+                                inputId = "logout",
+                                label = "Logout",
+                                tooltip = "Logout",
+                                icon = icon("sign-out")
+                                )),class = 'dropdown'),
                      tabPanel("Books",
                               mainPanel(DT::dataTableOutput(outputId ="vse.knjige"))
                               ),
