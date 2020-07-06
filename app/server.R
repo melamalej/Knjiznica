@@ -8,6 +8,7 @@ library(bcrypt)
 library(digest)
 library(DT)
 library(shinyjs)
+library(shinymanager)
 
 source("auth_public.R")
 
@@ -27,7 +28,8 @@ if (is.na(DB_PORT)) {
     # Vzpostavimo povezavo
     drv <- dbDriver("PostgreSQL")
     conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password,port=DB_PORT)
-    userID <- reactiveVal()
+    userID <- reactiveVal()   #placeholder za user ID
+    loggedIn <- reactiveVal(FALSE)     #za logout button
     dbGetQuery(conn, "SET CLIENT_ENCODING TO 'utf8'; SET NAMES 'utf8'") #poskusim resiti tezave s sumniki
     cancel.onSessionEnded <- session$onSessionEnded(function() {
       dbDisconnect(conn) #ko zapremo shiny naj se povezava do baze zapre
@@ -37,12 +39,18 @@ if (is.na(DB_PORT)) {
     outputOptions(output, 'signUpBOOL', suspendWhenHidden=FALSE)  # Da omogoca skrivanje/odkrivanje
     observeEvent(input$signup_btn, output$signUpBOOL <- eventReactive(input$signup_btn, 1))
     
+    observeEvent(c(input$userName,input$password), {
+      shinyjs::toggleState("signin_btn", 
+                           all(c(input$userName, input$password)!=""))
+    })
+    
     #funkcija uporabnik
     uporabnik <- reactive({
       user <- userID()
       validate(need(!is.null(user), "Potrebna je prijava!"))
       user
       })
+
     
  #------------------------------------------------------------------------------------------------- 
     #protokol pri vpisu
@@ -116,6 +124,9 @@ if (is.na(DB_PORT)) {
     )
  }
  
+ observeEvent(session$input$logout,{
+   session$reload()
+ })
  #------------------------------------------------------------------------------------------------- 
 
  # TABELA KNJIG
