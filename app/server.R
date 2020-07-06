@@ -18,6 +18,7 @@ if (is.na(DB_PORT)) {
 }
 
 
+
 # # Povežemo se z gonilnikom za PostgreSQL
 # drv <- dbDriver("PostgreSQL")
 # 
@@ -131,7 +132,7 @@ if (is.na(DB_PORT)) {
 
  # TABELA KNJIG
  #zavihek za tabelo vseh knjig
- myValue <- reactiveValues()
+ #myValue <- reactiveValues()
  
  shinyInput <- function(FUN, len, id, ...) {
    inputs <- character(len)
@@ -175,21 +176,14 @@ if (is.na(DB_PORT)) {
     
     stevec(stevec()+1)
     
-    danasnji_datum <- Sys.Date()    #v SQL mi now() in CURDATE() ne delata pravilno
     sql_id <- build_sql("SELECT availability FROM books WHERE kobissid =",idbook, con = conn)
     id <- dbGetQuery(conn, sql_id)
-    
-    #generiranje id izposoje:
-    # trans <- floor(runif(1, 10000, 99999))
-    # dosedanje_transakcije <- build_sql("SELECT id FROM transaction", con = conn)
-    # dos_trans <- dbGetQuery(conn, dosedanje_transakcije)
-    # if(trans %in% dos_trans$id) {trans <- round(runif(1, 10000, 99999))}
     
     #proces pri izposoji:
     if((id %>% pull(availability)) == 'yes'){
       # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
-      sql_zapis <- build_sql("INSERT INTO transaction(id,kobissid,idnumber, date_of_loan, due_date)  
-                        VALUES( ,",idbook,",", uporabnik(),",",danasnji_datum,",", danasnji_datum + 1,")", con = conn)     
+      sql_zapis <- build_sql("INSERT INTO transaction(kobissid,idnumber, date_of_loan, due_date)  
+                        VALUES( ",idbook,",", uporabnik(),", now(), now() + '2 weeks'::interval)", con = conn)     
       #spremeni razpoložljivost v books
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
                                       WHERE kobissid =" ,idbook, con = conn)
@@ -391,7 +385,7 @@ if (is.na(DB_PORT)) {
     razp <- dbGetQuery(conn, sql_razp)
     #proces pri vrnitvi:
     if((razp %>% pull(availability)) == 'no'){
-      sql_zap <- build_sql("UPDATE transaction SET date_of_return = ",danasnji,", arrears = ",zamudnina,"
+      sql_zap <- build_sql("UPDATE transaction SET date_of_return = now(), arrears = ",zamudnina,"
                              WHERE kobissid =",idbook,"AND date_of_return IS NULL", con = conn)
       
       sql_raz <- build_sql("UPDATE books SET availability = 'yes'
@@ -402,8 +396,7 @@ if (is.na(DB_PORT)) {
       razp
       output$vrniti <- renderPrint({"The book was successfully returned."})
       stevec(stevec()+1)
-      shinyjs::reset("my_loans")
-      shinyjs::reset("vse.knige")
+    
     }
     else{
       showModal(modalDialog(
@@ -430,9 +423,6 @@ if (is.na(DB_PORT)) {
         footer = actionButton("Finish1", "Finish")))
       shinyjs::reset("my_loans")
     }
-    
-    shinyjs::reset("my_loans") #ne dela
-    shinyjs::reset("vse.knjige")  #ne dela
 
   })
   
