@@ -447,7 +447,7 @@ if (is.na(DB_PORT)) {
   #------------------------------------------------------------------------------------------------- 
   
   #TABELA VRNJENIH KNJIG
-  vrnjene_knjige <- reactive({
+  vrnjene_knjig <- reactive({
     sql_u <- build_sql("SELECT books.title AS \"Book title\", books.author AS \"Author\",
 transaction.date_of_loan AS \"Date of loan\",transaction. due_date  AS \"Due date\", date_of_return AS \"Date of return\",
     arrears AS \"Arrears\" FROM transaction, books WHERE transaction.kobissid = books.kobissid AND date_of_return  IS NOT NULL AND transaction.idnumber = ",uporabnik(), con = conn)
@@ -455,7 +455,7 @@ transaction.date_of_loan AS \"Date of loan\",transaction. due_date  AS \"Due dat
   })
   
   output$returned_books<- renderDataTable({
-    vrnjene_knjige()
+    vrnjene_knjig()
   }, escape = FALSE)
   
   })
