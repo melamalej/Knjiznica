@@ -8,7 +8,7 @@ library(bcrypt)
 library(digest)
 library(DT)
 library(shinyjs)
-library(shinymanager)
+library(shinymanager)   #za logout button
 
 source("auth_public.R")
 
@@ -183,7 +183,7 @@ if (is.na(DB_PORT)) {
     if((id %>% pull(availability)) == 'yes'){
       # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
       sql_zapis <- build_sql("INSERT INTO transaction(kobissid,idnumber, date_of_loan, due_date)  
-                        VALUES( ",idbook,",", uporabnik(),", now(), now() + '2 weeks'::interval)", con = conn)     
+                        VALUES( ",idbook,",", uporabnik(),", now(), now() + '2 days'::interval)", con = conn)     
       #spremeni razpoložljivost v books
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
                                       WHERE kobissid =" ,idbook, con = conn)
@@ -246,11 +246,11 @@ if (is.na(DB_PORT)) {
   
   najdi.naslov <- reactive({
     naslov <- input$title
-    sql_naslov <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
-                                                        genre  AS \"Genre\",
-                                                        kobissid  AS \"Book ID\",
-                                                        availability AS \"Availability\"
-                                                        FROM books WHERE title =",naslov, con = conn)
+
+    sql_naslov <- build_sql('SELECT title AS "Book title", author AS "Author",
+                             genre AS "Genre", kobissid AS "Book ID",
+                             availability AS "Availability" FROM books
+                             WHERE title ILIKE ', "'%' || ", naslov, " || '%'", con=conn)
     knjige_naslov <- dbGetQuery(conn, sql_naslov)
     knjige_naslov
     
@@ -260,7 +260,7 @@ if (is.na(DB_PORT)) {
     najdi.naslov()
   })
   
-  output$rezultat1 <- renderDataTable({
+  output$sporocilo1 <- renderDataTable({
     isci.naslov()
   })
   
@@ -270,7 +270,7 @@ if (is.na(DB_PORT)) {
     else paste("Sorry, we do not have book with this title.")
   })
   
-  output$text1 <- renderText({
+  output$napis <- renderText({
     isci.naslov.tekst()
   })  
   
@@ -281,11 +281,11 @@ if (is.na(DB_PORT)) {
   
   najdi.avtor <- reactive({
     avtor <- input$author
-    sql_avtor <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
-                                                        genre  AS \"Genre\",
-                                                        kobissid  AS \"Book ID\",
-                                                        availability AS \"Availability\"
-                                                        FROM books WHERE author =",avtor, con = conn)
+    sql_avtor <- build_sql('SELECT title AS "Book title", author AS "Author",
+                             genre AS "Genre", kobissid AS "Book ID",
+                           availability AS "Availability" FROM books
+                           WHERE author ILIKE ', "'%' || ", avtor, " || '%'", con=conn)    
+
     knjige_avtor <- dbGetQuery(conn, sql_avtor)
     knjige_avtor
   })
@@ -304,7 +304,7 @@ if (is.na(DB_PORT)) {
     else paste("Sorry, we do not have books from this author.")
   })
   
-  output$text2 <- renderText({
+  output$napis2 <- renderText({
     isci.avtor.tekst()
   })  
   
@@ -314,11 +314,11 @@ if (is.na(DB_PORT)) {
   })
   najdi.zanr <- reactive({
     zanr <- input$genre
-    sql_zanr <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
-                                                        genre  AS \"Genre\",
-                                                        kobissid  AS \"Book ID\",
-                                                        availability AS \"Availability\"
-                                                        FROM books WHERE genre =",zanr, con = conn)
+    sql_zanr <- build_sql('SELECT title AS "Book title", author AS "Author",
+                             genre AS "Genre", kobissid AS "Book ID",
+                           availability AS "Availability" FROM books
+                           WHERE genre ILIKE ', "'%' || ", zanr, " || '%'", con=conn) 
+    
     knjige_zanr <- dbGetQuery(conn, sql_zanr)
     knjige_zanr
   })
@@ -337,7 +337,7 @@ if (is.na(DB_PORT)) {
     else paste("This genre does not exists.")
   })
   
-  output$text3 <- renderText({
+  output$napis3 <- renderText({
     isci.zanr.tekst()
   })  
   
