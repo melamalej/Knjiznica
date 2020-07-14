@@ -16,8 +16,6 @@ if (is.na(DB_PORT)) {
   DB_PORT <- 5432
 }
 
-
-
 # # Povežemo se z gonilnikom za PostgreSQL
 # drv <- dbDriver("PostgreSQL")
 # 
@@ -45,6 +43,8 @@ if (is.na(DB_PORT)) {
       user
       })
     
+    
+    
  #------------------------------------------------------------------------------------------------- 
     #protokol pri vpisu
  observeEvent(input$signin_btn,
@@ -52,6 +52,7 @@ if (is.na(DB_PORT)) {
               if(signInReturn[[1]]==1)
                 {userID(signInReturn[[2]])
                 output$signUpBOOL <- eventReactive(input$signin_btn, 2)
+                
                 # loggedIn(TRUE)
                 # userID <- input$userName
                 # upam da se tu userID nastavi na pravo vrednost
@@ -116,7 +117,7 @@ if (is.na(DB_PORT)) {
     }
     )
  }
- 
+
  #------------------------------------------------------------------------------------------------- 
 
  # TABELA KNJIG

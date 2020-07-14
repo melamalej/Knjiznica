@@ -1,0 +1,7 @@
+name: myApp
+remote_url: ''
+auth0_config:
+  api_url: paste0('https://', Sys.getenv('AUTH0_USER'), '.auth0.com')
+  credentials:
+    key: Sys.getenv("AUTH0_KEY")
+    secret: Sys.getenv("AUTH0_SECRET")
