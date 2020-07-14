@@ -8,6 +8,7 @@ library(bcrypt)
 library(digest)
 library(DT)
 library(shinyjs)
+library(shinymanager)   #za logout button
 
 source("auth_public.R")
 
@@ -26,7 +27,8 @@ if (is.na(DB_PORT)) {
     # Vzpostavimo povezavo
     drv <- dbDriver("PostgreSQL")
     conn <- dbConnect(drv, dbname = db, host = host, user = user, password = password,port=DB_PORT)
-    userID <- reactiveVal()
+    userID <- reactiveVal()   #placeholder za user ID
+    loggedIn <- reactiveVal(FALSE)     #za logout button
     dbGetQuery(conn, "SET CLIENT_ENCODING TO 'utf8'; SET NAMES 'utf8'") #poskusim resiti tezave s sumniki
     cancel.onSessionEnded <- session$onSessionEnded(function() {
       dbDisconnect(conn) #ko zapremo shiny naj se povezava do baze zapre
@@ -36,12 +38,18 @@ if (is.na(DB_PORT)) {
     outputOptions(output, 'signUpBOOL', suspendWhenHidden=FALSE)  # Da omogoca skrivanje/odkrivanje
     observeEvent(input$signup_btn, output$signUpBOOL <- eventReactive(input$signup_btn, 1))
     
+    observeEvent(c(input$userName,input$password), {
+      shinyjs::toggleState("signin_btn", 
+                           all(c(input$userName, input$password)!=""))
+    })
+    
     #funkcija uporabnik
     uporabnik <- reactive({
       user <- userID()
       validate(need(!is.null(user), "Potrebna je prijava!"))
       user
       })
+
     
     
     
@@ -117,7 +125,14 @@ if (is.na(DB_PORT)) {
     }
     )
  }
+<<<<<<< HEAD
 
+=======
+ 
+ observeEvent(session$input$logout,{
+   session$reload()
+ })
+>>>>>>> bb84ba2883640d7538359ad5b2ffb72b439126af
  #------------------------------------------------------------------------------------------------- 
 
  # TABELA KNJIG
@@ -173,7 +188,7 @@ if (is.na(DB_PORT)) {
     if((id %>% pull(availability)) == 'yes'){
       # transakcije id zdej vsakič nove zgenerira, ampak je v tabeli .0 končnica
       sql_zapis <- build_sql("INSERT INTO transaction(kobissid,idnumber, date_of_loan, due_date)  
-                        VALUES( ",idbook,",", uporabnik(),", now(), now() + '2 weeks'::interval)", con = conn)     
+                        VALUES( ",idbook,",", uporabnik(),", now(), now() + '2 days'::interval)", con = conn)     
       #spremeni razpoložljivost v books
       sql_razpolozljivost <- build_sql("UPDATE books SET availability = 'no'
                                       WHERE kobissid =" ,idbook, con = conn)
@@ -236,11 +251,11 @@ if (is.na(DB_PORT)) {
   
   najdi.naslov <- reactive({
     naslov <- input$title
-    sql_naslov <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
-                                                        genre  AS \"Genre\",
-                                                        kobissid  AS \"Book ID\",
-                                                        availability AS \"Availability\"
-                                                        FROM books WHERE title =",naslov, con = conn)
+
+    sql_naslov <- build_sql('SELECT title AS "Book title", author AS "Author",
+                             genre AS "Genre", kobissid AS "Book ID",
+                             availability AS "Availability" FROM books
+                             WHERE title ILIKE ', "'%' || ", naslov, " || '%'", con=conn)
     knjige_naslov <- dbGetQuery(conn, sql_naslov)
     knjige_naslov
     
@@ -250,7 +265,7 @@ if (is.na(DB_PORT)) {
     najdi.naslov()
   })
   
-  output$rezultat1 <- renderDataTable({
+  output$sporocilo1 <- renderDataTable({
     isci.naslov()
   })
   
@@ -260,7 +275,7 @@ if (is.na(DB_PORT)) {
     else paste("Sorry, we do not have book with this title.")
   })
   
-  output$text1 <- renderText({
+  output$napis <- renderText({
     isci.naslov.tekst()
   })  
   
@@ -271,11 +286,11 @@ if (is.na(DB_PORT)) {
   
   najdi.avtor <- reactive({
     avtor <- input$author
-    sql_avtor <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
-                                                        genre  AS \"Genre\",
-                                                        kobissid  AS \"Book ID\",
-                                                        availability AS \"Availability\"
-                                                        FROM books WHERE author =",avtor, con = conn)
+    sql_avtor <- build_sql('SELECT title AS "Book title", author AS "Author",
+                             genre AS "Genre", kobissid AS "Book ID",
+                           availability AS "Availability" FROM books
+                           WHERE author ILIKE ', "'%' || ", avtor, " || '%'", con=conn)    
+
     knjige_avtor <- dbGetQuery(conn, sql_avtor)
     knjige_avtor
   })
@@ -294,7 +309,7 @@ if (is.na(DB_PORT)) {
     else paste("Sorry, we do not have books from this author.")
   })
   
-  output$text2 <- renderText({
+  output$napis2 <- renderText({
     isci.avtor.tekst()
   })  
   
@@ -304,11 +319,11 @@ if (is.na(DB_PORT)) {
   })
   najdi.zanr <- reactive({
     zanr <- input$genre
-    sql_zanr <- build_sql("SELECT  title AS \"Book title\", author AS \"Author\",
-                                                        genre  AS \"Genre\",
-                                                        kobissid  AS \"Book ID\",
-                                                        availability AS \"Availability\"
-                                                        FROM books WHERE genre =",zanr, con = conn)
+    sql_zanr <- build_sql('SELECT title AS "Book title", author AS "Author",
+                             genre AS "Genre", kobissid AS "Book ID",
+                           availability AS "Availability" FROM books
+                           WHERE genre ILIKE ', "'%' || ", zanr, " || '%'", con=conn) 
+    
     knjige_zanr <- dbGetQuery(conn, sql_zanr)
     knjige_zanr
   })
@@ -327,7 +342,7 @@ if (is.na(DB_PORT)) {
     else paste("This genre does not exists.")
   })
   
-  output$text3 <- renderText({
+  output$napis3 <- renderText({
     isci.zanr.tekst()
   })  
   
@@ -437,7 +452,7 @@ if (is.na(DB_PORT)) {
   #------------------------------------------------------------------------------------------------- 
   
   #TABELA VRNJENIH KNJIG
-  vrnjene_knjige <- reactive({
+  vrnjene_knjig <- reactive({
     sql_u <- build_sql("SELECT books.title AS \"Book title\", books.author AS \"Author\",
 transaction.date_of_loan AS \"Date of loan\",transaction. due_date  AS \"Due date\", date_of_return AS \"Date of return\",
     arrears AS \"Arrears\" FROM transaction, books WHERE transaction.kobissid = books.kobissid AND date_of_return  IS NOT NULL AND transaction.idnumber = ",uporabnik(), con = conn)
@@ -445,7 +460,7 @@ transaction.date_of_loan AS \"Date of loan\",transaction. due_date  AS \"Due dat
   })
   
   output$returned_books<- renderDataTable({
-    vrnjene_knjige()
+    vrnjene_knjig()
   }, escape = FALSE)
   
   })
